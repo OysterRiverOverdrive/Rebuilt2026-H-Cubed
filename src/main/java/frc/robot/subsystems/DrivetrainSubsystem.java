@@ -251,7 +251,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public Pose2d getVisionPose() {
-    return m_visionOdometry.getEstimatedPosition();
+    return visionOdometry.getEstimatedPosition();
   }
 
   /**
@@ -336,7 +336,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
         });
 
-    m_visionOdometry.update(
+    visionOdometry.update(
         Rotation2d.fromDegrees(getHeading()),
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
@@ -351,11 +351,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     if (tick == 10 && vision.estConsumer.initialized) {
       tick = 0;
-      m_visionOdometry.addVisionMeasurement(
+      visionOdometry.addVisionMeasurement(
           vision.estConsumer.getPose2d(),
           vision.estConsumer.getTimeStamp(),
           vision.estConsumer.getStdDevs());
     }
-    visionPose.setRobotPose(m_visionOdometry.getEstimatedPosition());
+    visionPose.setRobotPose(visionOdometry.getEstimatedPosition());
   }
 }
