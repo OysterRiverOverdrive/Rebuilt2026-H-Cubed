@@ -24,7 +24,7 @@ public class FlywheelStopCommand extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {flywheel_subsystem.flywheelStopCmd();}
 
   // Called once the command ends or is interrupted.
   @Override

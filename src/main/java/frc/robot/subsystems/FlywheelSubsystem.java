@@ -23,6 +23,10 @@ public class FlywheelSubsystem extends SubsystemBase { // if a quiz is quizzical
     flywheel.stopMotor();
   }
 
+  public void flywheelReverseCmd() {
+    flywheel.set(-1 * RobotConstants.kFlywheelSpeed);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
