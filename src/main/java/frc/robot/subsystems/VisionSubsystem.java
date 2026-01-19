@@ -74,7 +74,7 @@ public class VisionSubsystem extends SubsystemBase {
       SmartDashboard.putData("Camera " + (i + 1), poseEstField[i]);
     }
 
-    fieldmap = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+    fieldmap = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
     photonEstimatorCam1 =
         new PhotonPoseEstimator(

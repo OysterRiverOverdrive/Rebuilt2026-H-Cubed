@@ -93,6 +93,10 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> drivetrain.zeroHeading()));
 
     cutil
+        .supplier(Controllers.xbox_rt, DriveConstants.joysticks.DRIVER)
+        .onTrue(new InstantCommand(() -> drivetrain.recalibrateVisionOdometry()));
+
+    cutil
         .supplier(Controllers.xbox_a, DriveConstants.joysticks.DRIVER)
         .onTrue(new InstantCommand(() -> DrivetrainSubsystem.toggleAutoAim()));
 
