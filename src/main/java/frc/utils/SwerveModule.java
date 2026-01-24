@@ -7,8 +7,9 @@ package frc.utils;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -89,18 +90,26 @@ public class SwerveModule {
     // Set the PID gains for the driving motor. Note these are example gains, and you
     // may need to tune them for your own robot!
     m_drivingConfig
-        .closedLoop
-        .pid(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD)
-        .velocityFF(ModuleConstants.kDrivingFF)
-        .outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
+            .closedLoop
+            .pid(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD)
+            .outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
+
+    m_drivingConfig
+            .closedLoop
+            .feedForward
+            .kV(ModuleConstants.kDrivingFF);
 
     // Set the PID gains for the turning motor. Note these are example gains, and you
     // may need to tune them for your own robot!
     m_turningConfig
-        .closedLoop
-        .pid(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD)
-        .velocityFF(ModuleConstants.kTurningFF)
-        .outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
+            .closedLoop
+            .pid(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD)
+            .outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
+
+    m_turningConfig
+            .closedLoop
+            .feedForward
+            .kV(ModuleConstants.kTurningFF);
 
     // Set Idle Modes
     m_drivingConfig.idleMode(ModuleConstants.kDrivingMotorIdleMode);
@@ -168,11 +177,11 @@ public class SwerveModule {
     correctedDesiredState.optimize(new Rotation2d(m_turningEncoder.getPosition()));
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
-    m_drivingPIDController.setReference(
-        correctedDesiredState.speedMetersPerSecond, SparkMax.ControlType.kVelocity);
+    m_drivingPIDController.setSetpoint(
+            correctedDesiredState.speedMetersPerSecond, SparkBase.ControlType.kVelocity);
 
-    m_turningPIDController.setReference(
-        correctedDesiredState.angle.getRadians(), SparkMax.ControlType.kPosition);
+    m_turningPIDController.setSetpoint(
+            correctedDesiredState.angle.getRadians(), SparkBase.ControlType.kPosition);
 
     m_desiredState = desiredState;
   }
