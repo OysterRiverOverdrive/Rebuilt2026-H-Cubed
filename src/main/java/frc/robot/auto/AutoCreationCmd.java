@@ -25,9 +25,9 @@ public class AutoCreationCmd {
   DrivetrainSubsystem drivetrain;
 
   /**
-   * Method to autonomously drive the robot (ALL MEASUREMENTS IN METERS)
-   * All coordinates should be robot oriented (the robot's facing direction is angle 0,
-   * The robot's coordinates are (0, 0), positive x is forward, positive y is left)
+   * Method to autonomously drive the robot (ALL MEASUREMENTS IN METERS) All coordinates should be
+   * robot oriented (the robot's facing direction is angle 0, The robot's coordinates are (0, 0),
+   * positive x is forward, positive y is left)
    *
    * @param _drivetrain Swerve Drivetrain Subsystem Instance
    * @param waypoints A list of points the robot should travel through
@@ -80,11 +80,11 @@ public class AutoCreationCmd {
   }
 
   /**
-   * Method to autonomously drive the robot (ALL MEASUREMENTS IN METERS)
-   * All coordinates should be field oriented
-   * 
-   * DO NOT USE CURRENTLY! Currently, this method uses drivetrain.getPose(),
-   * which is inaccurate due to being relative to robot start position
+   * Method to autonomously drive the robot (ALL MEASUREMENTS IN METERS) All coordinates should be
+   * field oriented
+   *
+   * <p>DO NOT USE CURRENTLY! Currently, this method uses drivetrain.getPose(), which is inaccurate
+   * due to being relative to robot start position
    *
    * @param _drivetrain Swerve Drivetrain Subsystem Instance
    * @param waypoints A list of points the robot should travel through
@@ -137,10 +137,10 @@ public class AutoCreationCmd {
   }
 
   /**
-   * This is a version of autodrive, with the ability to use your own speed,
-   * but currently this won't work right due to the use of drivetrain.getPose(),
-   * which is inaccurate and neither field nor robot oriented
-   * 
+   * This is a version of autodrive, with the ability to use your own speed, but currently this
+   * won't work right due to the use of drivetrain.getPose(), which is inaccurate and neither field
+   * nor robot oriented
+   *
    * @param maxSpeed
    * @param _drivetrain
    * @param waypoints
