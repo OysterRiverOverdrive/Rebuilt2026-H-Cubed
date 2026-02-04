@@ -126,7 +126,8 @@ public final class Constants {
 
     // Physical Constants for Speed Calculation
     // Verify these match your physical robot configuration ---------------------------------------
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.0);
+    public static final double kWheelDiameterMeters =
+        edu.wpi.first.math.util.Units.inchesToMeters(3.0);
     public static final double kDrivingMotorPinionTeeth = 13.0; // Options: 12T, 13T, or 14T
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60.0;
 
