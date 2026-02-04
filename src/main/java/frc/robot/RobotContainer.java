@@ -14,15 +14,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.auto.*;
-// import frc.robot.auto.plans.*;
-import frc.robot.commands.IntakeWheel.IntakeWheelForwardCommand;
-import frc.robot.commands.IntakeWheel.IntakeWheelReverseCommand;
-import frc.robot.commands.IntakeWheel.IntakeWheelStopCommand;
 import frc.robot.commands.TeleopCmd;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.EstimateConsumer;
-import frc.robot.subsystems.IntakeWheelSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.commands.feederr.*;
+import frc.robot.commands.intake.*;
+import frc.robot.commands.shooter.*;
+import frc.robot.subsystems.*;
 import frc.utils.ControllerUtils;
 import org.littletonrobotics.urcl.URCL;
 
@@ -44,7 +40,9 @@ public class RobotContainer {
   // Subsystems
   private final VisionSubsystem vision = new VisionSubsystem(new EstimateConsumer());
   private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(vision);
-  private final IntakeWheelSubsystem intakeWheel = new IntakeWheelSubsystem();
+  private final FeederSubsystem feeder = new FeederSubsystem();
+  private final IntakeSubsystem intakeWheel = new IntakeSubsystem();
+  private final ShooterSubsystem shooter = new ShooterSubsystem();
 
   // Commands
   private final TeleopCmd teleopCmd =
@@ -107,16 +105,38 @@ public class RobotContainer {
         .supplier(Controllers.xbox_a, DriveConstants.joysticks.DRIVER)
         .onTrue(new InstantCommand(() -> DrivetrainSubsystem.toggleAutoAim()));
 
+    // Feeder Bindings
+    cutil
+        .triggerSupplier(Controllers.xbox_rt, 0.2, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new FeederForwardCommand(feeder))
+        .onFalse(new FeederStopCommand(feeder));
+
+    cutil
+        .supplier(Controllers.xbox_rb, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new FeederReverseCommand(feeder))
+        .onFalse(new FeederStopCommand(feeder));
+
     // Intake Wheel Bindings
     cutil
-        .supplier(Controllers.xbox_lb, DriveConstants.joysticks.OPERATOR)
+        .triggerSupplier(Controllers.xbox_lt, 0.2, DriveConstants.joysticks.OPERATOR)
         .onTrue(new IntakeWheelForwardCommand(intakeWheel))
         .onFalse(new IntakeWheelStopCommand(intakeWheel));
 
     cutil
-        .supplier(Controllers.xbox_rb, DriveConstants.joysticks.OPERATOR)
+        .supplier(Controllers.xbox_lb, DriveConstants.joysticks.OPERATOR)
         .onTrue(new IntakeWheelReverseCommand(intakeWheel))
         .onFalse(new IntakeWheelStopCommand(intakeWheel));
+
+    // Shooter Wheel Bindings
+    cutil
+        .supplier(Controllers.xbox_a, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new ShooterForwardCommand(shooter))
+        .onFalse(new ShooterStopCommand(shooter));
+
+    cutil
+        .supplier(Controllers.xbox_b, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new ShooterReverseCommand(shooter))
+        .onFalse(new ShooterStopCommand(shooter));
   }
 
   public Command getAutonomousCommand() {

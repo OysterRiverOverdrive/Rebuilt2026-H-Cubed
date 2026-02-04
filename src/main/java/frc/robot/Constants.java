@@ -52,42 +52,42 @@ public final class Constants {
     // back right is camera 3, front right is camera 4
     public static final Transform3d kRobotToCam1 =
         new Transform3d(
-            Distance.ofRelativeUnits(11, Units.Inches),
-            Distance.ofRelativeUnits(11, Units.Inches),
-            Distance.ofRelativeUnits(24, Units.Centimeters),
+            Distance.ofRelativeUnits(11.5, Units.Inches),
+            Distance.ofRelativeUnits(11.5, Units.Inches),
+            Distance.ofRelativeUnits(9.5, Units.Inches),
             new Rotation3d(
                 Angle.ofRelativeUnits(0, Units.Degrees),
-                Angle.ofRelativeUnits(30, Units.Degrees),
+                Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(45, Units.Degrees)));
 
     public static final Transform3d kRobotToCam2 =
         new Transform3d(
-            Distance.ofRelativeUnits(-11, Units.Inches),
-            Distance.ofRelativeUnits(11, Units.Inches),
-            Distance.ofRelativeUnits(24, Units.Centimeters),
+            Distance.ofRelativeUnits(-11.5, Units.Inches),
+            Distance.ofRelativeUnits(11.5, Units.Inches),
+            Distance.ofRelativeUnits(9.5, Units.Inches),
             new Rotation3d(
                 Angle.ofRelativeUnits(0, Units.Degrees),
-                Angle.ofRelativeUnits(30, Units.Degrees),
+                Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(135, Units.Degrees)));
 
     public static final Transform3d kRobotToCam3 =
         new Transform3d(
-            Distance.ofRelativeUnits(-11, Units.Inches),
-            Distance.ofRelativeUnits(-11, Units.Inches),
-            Distance.ofRelativeUnits(24, Units.Centimeters),
+            Distance.ofRelativeUnits(-11.5, Units.Inches),
+            Distance.ofRelativeUnits(-11.5, Units.Inches),
+            Distance.ofRelativeUnits(9.5, Units.Inches),
             new Rotation3d(
                 Angle.ofRelativeUnits(0, Units.Degrees),
-                Angle.ofRelativeUnits(30, Units.Degrees),
+                Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(225, Units.Degrees)));
 
     public static final Transform3d kRobotToCam4 =
         new Transform3d(
-            Distance.ofRelativeUnits(11, Units.Inches),
-            Distance.ofRelativeUnits(-11, Units.Inches),
-            Distance.ofRelativeUnits(24, Units.Centimeters),
+            Distance.ofRelativeUnits(11.5, Units.Inches),
+            Distance.ofRelativeUnits(-11.5, Units.Inches),
+            Distance.ofRelativeUnits(9.5, Units.Inches),
             new Rotation3d(
                 Angle.ofRelativeUnits(0, Units.Degrees),
-                Angle.ofRelativeUnits(30, Units.Degrees),
+                Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(315, Units.Degrees)));
 
     // The standard deviations of our vision estimated poses, which affect correction rate
@@ -163,9 +163,13 @@ public final class Constants {
     public static final int kRearLeftDrivingCanId = 9;
     public static final int kRearLeftTurningCanId = 8;
 
-    public static final int kFlywheelCanId = 9;
-    public static final int kIntakeWheelCanId = 10;
-    public static final int kFeederCanId = 11;
+    public static final int kIntakeLiftCanId = 15;
+    public static final int kIntakeWheelCanId = 16;
+    public static final int kShooterMainCanId = 17;
+    public static final int kShooterSecondaryCanId = 18;
+    public static final int kFeederWheelCanId = 19;
+    public static final int kFeederSpinCanId = 20;
+    public static final int kClimberCanId = 21;
 
     // Used to declare Navx as upside down
     public static final boolean kGyroReversed = true;
@@ -176,9 +180,12 @@ public final class Constants {
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-    public static final double kFlywheelSpeed = 0.5;
-    public static final double kIntakeWheelSpeed = 0.5;
-    public static final double kFeederSpeed = 0.5;
+    public static final double kIntakeLiftP = 0;
+    public static final double kIntakeWheelSpeed = 0.3;
+    public static final double kFeederWheelSpeed = 0.3;
+    public static final double kWheelSpeed = 0.3;
+    public static final double kFeederSpinSpeed = 0.3;
+    public static final double kClimberSpeed = 0.3;
   }
 
   // Constants specifically for Swerve Module

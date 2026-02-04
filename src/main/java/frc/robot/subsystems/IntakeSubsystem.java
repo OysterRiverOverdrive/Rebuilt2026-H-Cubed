@@ -9,13 +9,13 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 
-public class IntakeWheelSubsystem extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase {
 
   private SparkMax IntakeWheel =
       new SparkMax(RobotConstants.kIntakeWheelCanId, MotorType.kBrushless);
 
   /** Creates a new IntakeWheelSubsystem. */
-  public IntakeWheelSubsystem() {}
+  public IntakeSubsystem() {}
 
   public void IntakeWheelForwardCmd() {
     IntakeWheel.set(RobotConstants.kIntakeWheelSpeed);
