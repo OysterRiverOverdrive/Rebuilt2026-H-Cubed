@@ -27,8 +27,8 @@ public final class Configs {
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
           // These are example gains you may need to them for your own robot!
           .pid(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD)
-          .velocityFF(drivingVelocityFeedForward)
-          .outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
+          .outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput)
+          .feedForward.kV(drivingVelocityFeedForward);
 
       turningConfig
           .idleMode(ModuleConstants.kTurningMotorIdleMode)
@@ -37,7 +37,7 @@ public final class Configs {
           .absoluteEncoder
           // Invert the turning encoder, since the output shaft rotates in the opposite
           // direction of the steering motor in the MAXSwerve Module.
-          .inverted(true)
+          .inverted(ModuleConstants.kTurningEncoderInverted)
           .positionConversionFactor(turningFactor) // radians
           .velocityConversionFactor(turningFactor / 60.0); // radians per second
       turningConfig
