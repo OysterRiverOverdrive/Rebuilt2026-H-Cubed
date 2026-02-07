@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -190,35 +192,34 @@ public final class Constants {
 
   // Constants specifically for Swerve Module
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
-    // robot that drives faster).
-    public static final int kDrivingMotorPinionTeeth = 13;
+    // Driving gear, same rpm as motor
+    public static final int kDrivePinionGearTeeth = 13;
+
+    // Driven by drive pinion gear
+    public static final int kDriveSpurGearTeeth = 22;
+
+    // Driving gear on underside, same rpm as spur gear
+    public static final int kBevelPinionGearTeeth = 15;
+
+    // Driven by bevel pinion gear
+    public static final int kWheelBevelGearTeeth = 45;
+
+    // Final gear Ratio
+    public static final double kDriveGearRatio = (kDrivePinionGearTeeth / kDriveSpurGearTeeth)
+                * (kBevelPinionGearTeeth / kWheelBevelGearTeeth);
 
     // Invert the turning encoder, since the output shaft rotates in the opposite direction of
     // the steering motor in the MAXSwerve Module.
     public static final boolean kTurningEncoderInverted = true;
 
-    // Calculations required for driving motor conversion factors and feed forward
-    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = 0.0762;
+    public static final double kWheelDiameterMeters =
+        Distance.ofRelativeUnits(3, Units.Inches).in(Units.Meters);
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the
-    // bevel pinion
-    public static final double kDrivingMotorReduction =
-        (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+
+    // Maximum attainable speed of the drive wheel
     public static final double kDriveWheelFreeSpeedRps =
-        (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters) / kDrivingMotorReduction;
-    public static final double kDrivingEncoderPositionFactor =
-        (kWheelDiameterMeters * Math.PI) / kDrivingMotorReduction; // meters
-    public static final double kDrivingEncoderVelocityFactor =
-        ((kWheelDiameterMeters * Math.PI) / kDrivingMotorReduction) / 60.0; // meters per second
-    public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
-    public static final double kTurningEncoderVelocityFactor =
-        (2 * Math.PI) / 60.0; // radians per second
-    public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
-    public static final double kTurningEncoderPositionPIDMaxInput =
-        kTurningEncoderPositionFactor; // radians
+        NeoMotorConstants.kFreeSpeedRps * kDriveGearRatio;
+    public static final double kDriveMaxAttainableSpeedMetersPerSecond = kDriveWheelFreeSpeedRps * kWheelCircumferenceMeters;
 
     // PID Driving Values ---
     // Most likely used to act as a form of slew
@@ -250,6 +251,8 @@ public final class Constants {
   }
 
   public static final class NeoMotorConstants {
+    // Maximum attainable speeds of motors
     public static final double kFreeSpeedRpm = 5676;
+    public static final double kFreeSpeedRps = kFreeSpeedRpm / 60;
   }
 }

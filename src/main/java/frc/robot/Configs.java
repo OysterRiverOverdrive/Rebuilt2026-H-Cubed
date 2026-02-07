@@ -11,8 +11,6 @@ public final class Configs {
 
     static {
       // Use module constants to calculate conversion factors and feed forward gain.
-      double drivingFactor =
-          ModuleConstants.kWheelDiameterMeters * Math.PI / ModuleConstants.kDrivingMotorReduction;
       double turningFactor = 2 * Math.PI;
       double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
 
@@ -21,8 +19,9 @@ public final class Configs {
           .smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
       drivingConfig
           .encoder
-          .positionConversionFactor(drivingFactor) // meters
-          .velocityConversionFactor(drivingFactor / 60.0); // meters per second
+          // Modifies the driving encoder to use meters instead of rotations
+          .positionConversionFactor(ModuleConstants.kWheelCircumferenceMeters)
+          .velocityConversionFactor(ModuleConstants.kWheelCircumferenceMeters);
       drivingConfig
           .closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
