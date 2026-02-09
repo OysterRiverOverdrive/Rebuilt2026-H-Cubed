@@ -62,8 +62,7 @@ public class RobotContainer {
   private final TimeOfFlight tof = new TimeOfFlight(0);
 
   // AUTOS
-  private final AutoNierAutomataPlan testAuto =
-    new AutoNierAutomataPlan(drivetrain);
+  private final AutoNierAutomataPlan testAuto = new AutoNierAutomataPlan(drivetrain);
 
   public RobotContainer() {
 

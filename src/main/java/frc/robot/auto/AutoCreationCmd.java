@@ -22,7 +22,6 @@ import java.util.List;
 
 public class AutoCreationCmd {
 
-
   /**
    * Method to autonomously drive the robot (ALL MEASUREMENTS IN METERS) All coordinates should be
    * robot oriented (the robot's facing direction is angle 0, The robot's coordinates are (0, 0),

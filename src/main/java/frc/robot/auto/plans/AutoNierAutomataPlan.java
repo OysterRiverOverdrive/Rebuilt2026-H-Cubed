@@ -18,15 +18,13 @@ import java.util.List;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoNierAutomataPlan extends ParallelCommandGroup {
   /** Creates a new AutoNierAutomataPlan. */
-  public AutoNierAutomataPlan(
-    DrivetrainSubsystem drive
-  ) {
+  public AutoNierAutomataPlan(DrivetrainSubsystem drive) {
 
-    Command foo = 
-      AutoCreationCmd.AutoRobotDriveCmd(
-        drive,
-        List.of(new Translation2d(1, 0)),
-        new Pose2d(1, 1, new Rotation2d(-Math.PI / 2)));
+    Command foo =
+        AutoCreationCmd.AutoRobotDriveCmd(
+            drive,
+            List.of(new Translation2d(1, 0)),
+            new Pose2d(1, 1, new Rotation2d(-Math.PI / 2)));
 
     addCommands(foo);
   }
