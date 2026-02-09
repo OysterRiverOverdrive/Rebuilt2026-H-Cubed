@@ -25,7 +25,13 @@ public class AutoNierAutomataPlan extends ParallelCommandGroup {
             drive,
             List.of(new Translation2d(1, 0)),
             new Pose2d(1, 1, new Rotation2d(-Math.PI / 2)));
+    Command spinny = 
+      AutoCreationCmd.AutoRobotDriveCmd(
+        drive,
+        List.of(new Translation2d(0, 0)),
+        new Pose2d(1, 1, new Rotation2d(-Math.PI * 4))
+        );
 
-    addCommands(foo);
+    addCommands(foo, spinny);
   }
 }
