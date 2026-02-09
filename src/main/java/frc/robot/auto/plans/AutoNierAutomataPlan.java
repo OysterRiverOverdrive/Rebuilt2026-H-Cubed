@@ -32,6 +32,8 @@ public class AutoNierAutomataPlan extends ParallelCommandGroup {
         new Pose2d(1, 1, new Rotation2d(-Math.PI * 4))
         );
 
-    addCommands(foo, spinny);
+    addCommands(
+      foo
+      .andThen(spinny));
   }
 }
