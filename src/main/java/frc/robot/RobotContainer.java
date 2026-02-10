@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.auto.*;
+import frc.robot.commands.ManualDriveCmd;
+import frc.robot.commands.ManualDriveStopCmd;
 import frc.robot.commands.TeleopCmd;
 import frc.robot.commands.feederr.*;
 import frc.robot.commands.intake.*;
@@ -104,6 +106,11 @@ public class RobotContainer {
     cutil
         .supplier(Controllers.xbox_a, DriveConstants.joysticks.DRIVER)
         .onTrue(new InstantCommand(() -> DrivetrainSubsystem.toggleAutoAim()));
+
+    cutil
+        .supplier(Controllers.xbox_b, DriveConstants.joysticks.DRIVER)
+        .onTrue(new ManualDriveCmd(drivetrain))
+        .onFalse(new ManualDriveStopCmd(drivetrain));
 
     // Feeder Bindings
     cutil
