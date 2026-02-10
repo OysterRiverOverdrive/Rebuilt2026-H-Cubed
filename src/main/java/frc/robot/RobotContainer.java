@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.auto.*;
+import frc.robot.auto.plans.AutoMiddleFieldPlan;
 import frc.robot.auto.plans.AutoNierAutomataPlan;
 // import frc.robot.auto.plans.*;
 import frc.robot.commands.IntakeWheel.IntakeWheelForwardCommand;
@@ -62,7 +63,7 @@ public class RobotContainer {
   private final TimeOfFlight tof = new TimeOfFlight(0);
 
   // AUTOS
-  private final AutoNierAutomataPlan testAuto = new AutoNierAutomataPlan(drivetrain);
+  private final AutoMiddleFieldPlan middleField = new AutoMiddleFieldPlan(drivetrain);
 
   public RobotContainer() {
 
@@ -132,7 +133,7 @@ public class RobotContainer {
     switch (m_chooser.getSelected()) {
       default:
       case auto1:
-        auto = testAuto;
+        auto = middleField;
         break;
       case auto2:
         break;
