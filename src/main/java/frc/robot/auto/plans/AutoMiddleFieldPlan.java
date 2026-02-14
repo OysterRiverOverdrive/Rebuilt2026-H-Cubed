@@ -10,22 +10,36 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.auto.AutoCreationCmd;
+import frc.robot.commands.IntakeWheel.IntakeWheelForwardCommand;
+import frc.robot.commands.IntakeWheel.IntakeWheelStopCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.IntakeWheelSubsystem;
 import java.util.List;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoMiddleFieldPlan extends ParallelCommandGroup {
+
+  private final IntakeWheelSubsystem intakewheel = new IntakeWheelSubsystem();
+
   public AutoMiddleFieldPlan(DrivetrainSubsystem drive) {
     Command toMid = 
-      AutoCreationCmd.AutoRobotDriveCmd(
+      AutoCreationCmd.AutoRobotDriveCmd( // start from top threshhold, go to middle, turn to the right along the way
         drive,
         List.of(new Translation2d(4.125, 0)),
-        new Pose2d(8.25, 16.54));
-    Command 
+        new Pose2d(8.25, 8.0, new Rotation2d(-Math.PI / 2)));
+    Command moveDown = 
+      AutoCreationCmd.AutoRobotDriveCmd( // move down to where the balls are and turn towards the bump
+        drive, 
+        List.of(new Translation2d(0, -3.0)), 
+        new Pose2d(8.25, 5.0, new Rotation2d(-Math.PI / 2)));
+    Command spinIntakeWheel = 
+      new IntakeWheelForwardCommand(intakewheel); // spins the intake wheel, hopefully will run as the robot is moving
+    Command stopIntakeWheel =
+      new IntakeWheelStopCommand(intakewheel); // stops the intake wheel spinning
     addCommands(
       toMid
+        .andThen(moveDown.alongWith(spinIntakeWheel))
+        .andThen(stopIntakeWheel)
+
     );
   }
 }
