@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ShooterReverseCommand extends Command {
+public class ShooterDislodgeCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShooterSubsystem shooter;
 
-  /** Creates a new FlywheelReverseCommand. */
-  public ShooterReverseCommand(ShooterSubsystem shooter) {
+  /** Creates a new FlywheelForwardCommand. */
+  public ShooterDislodgeCommand(ShooterSubsystem shooter) {
     this.shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
@@ -26,7 +26,7 @@ public class ShooterReverseCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.shooterReverseCmd();
+    shooter.shooterDislodgeCmd();
   }
 
   // Called once the command ends or is interrupted.

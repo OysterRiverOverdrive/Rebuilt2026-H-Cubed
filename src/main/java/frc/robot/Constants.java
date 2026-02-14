@@ -181,9 +181,8 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     public static final double kIntakeLiftP = 0;
-    public static final double kIntakeWheelSpeed = 0.3;
+    public static final double kIntakeWheelSpeed = 0.6;
     public static final double kFeederWheelSpeed = 0.3;
-    public static final double kWheelSpeed = 0.3;
     public static final double kFeederSpinSpeed = 0.3;
     public static final double kClimberSpeed = 0.3;
   }

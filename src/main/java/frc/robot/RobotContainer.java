@@ -127,16 +127,16 @@ public class RobotContainer {
         .onTrue(new IntakeWheelReverseCommand(intakeWheel))
         .onFalse(new IntakeWheelStopCommand(intakeWheel));
 
-    // Shooter Wheel Bindings
+    // Shooter Bindings
     cutil
         .supplier(Controllers.xbox_a, DriveConstants.joysticks.OPERATOR)
-        .onTrue(new ShooterForwardCommand(shooter))
-        .onFalse(new ShooterStopCommand(shooter));
+        .onTrue(new InstantCommand(() -> shooter.shooterDislodgeCmd()))
+        .onFalse(new InstantCommand(() -> shooter.shooterStopCmd()));
 
     cutil
         .supplier(Controllers.xbox_b, DriveConstants.joysticks.OPERATOR)
-        .onTrue(new ShooterReverseCommand(shooter))
-        .onFalse(new ShooterStopCommand(shooter));
+        .onTrue(new InstantCommand(() -> shooter.shooterShootCmd()))
+        .onFalse(new InstantCommand(() -> shooter.shooterStopCmd()));
   }
 
   public Command getAutonomousCommand() {
