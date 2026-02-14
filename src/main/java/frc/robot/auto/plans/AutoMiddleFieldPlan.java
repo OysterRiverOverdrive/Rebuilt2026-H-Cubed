@@ -22,7 +22,8 @@ public class AutoMiddleFieldPlan extends ParallelCommandGroup {
       AutoCreationCmd.AutoRobotDriveCmd(
         drive,
         List.of(new Translation2d(4.125, 0)),
-        new Pose2d(8.25, 16.54, new Rotation2d(-Math.PI / 2)));
+        new Pose2d(8.25, 16.54));
+    Command 
     addCommands(
       toMid
     );
