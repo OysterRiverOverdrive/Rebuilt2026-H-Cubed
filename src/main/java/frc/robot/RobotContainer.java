@@ -15,9 +15,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.auto.*;
 import frc.robot.commands.TeleopCmd;
-import frc.robot.commands.feederr.*;
+import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.*;
-import frc.robot.commands.shooter.*;
 import frc.robot.subsystems.*;
 import frc.utils.ControllerUtils;
 import org.littletonrobotics.urcl.URCL;
@@ -42,7 +41,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(vision);
   private final FeederSubsystem feeder = new FeederSubsystem();
   private final IntakeSubsystem intakeWheel = new IntakeSubsystem();
-  private final ShooterSubsystem shooter = new ShooterSubsystem();
+  private final ShooterSubsystem shooter = new ShooterSubsystem(drivetrain);
 
   // Commands
   private final TeleopCmd teleopCmd =

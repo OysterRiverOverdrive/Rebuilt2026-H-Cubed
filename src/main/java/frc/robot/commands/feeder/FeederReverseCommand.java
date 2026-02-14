@@ -2,21 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.shooter;
+package frc.robot.commands.feeder;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ShooterDislodgeCommand extends Command {
+public class FeederReverseCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ShooterSubsystem shooter;
+  private final FeederSubsystem feeder;
 
-  /** Creates a new FlywheelForwardCommand. */
-  public ShooterDislodgeCommand(ShooterSubsystem shooter) {
-    this.shooter = shooter;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+  /** Creates a new FeederReverseCommand. */
+  public FeederReverseCommand(FeederSubsystem feeder) {
+    this.feeder = feeder;
+    addRequirements(feeder);
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +25,7 @@ public class ShooterDislodgeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.shooterDislodgeCmd();
+    feeder.feederReverseCmd();
   }
 
   // Called once the command ends or is interrupted.
