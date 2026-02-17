@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.auto.*;
+import frc.robot.auto.plans.AutoAllianceZonePlan;
+import frc.robot.auto.plans.AutoMiddleFieldPlan;
+import frc.robot.auto.plans.AutoNierAutomataPlan;
 // import frc.robot.auto.plans.*;
 import frc.robot.commands.IntakeWheel.IntakeWheelForwardCommand;
 import frc.robot.commands.IntakeWheel.IntakeWheelReverseCommand;
@@ -60,6 +63,10 @@ public class RobotContainer {
   // https://www.chiefdelphi.com/t/2026-playing-with-fusion-product-launch-advanced-battery-solution/507717/115
   private final TimeOfFlight tof = new TimeOfFlight(0);
 
+  // AUTOS
+  private final AutoMiddleFieldPlan middleField = new AutoMiddleFieldPlan(drivetrain);
+  private final AutoAllianceZonePlan allianceZone = new AutoAllianceZonePlan();
+
   public RobotContainer() {
 
     DataLogManager.start();
@@ -77,8 +84,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(teleopCmd);
 
     // Add Auto options to dropdown and push to dashboard
-    m_chooser.setDefaultOption("Auto[Rename Me]", auto1);
-    m_chooser.addOption("Auto[Rename Me]", auto2);
+    m_chooser.setDefaultOption("middleField", auto1);
+    m_chooser.addOption("allianceZone", auto2);
     m_chooser.addOption("Auto[Rename Me]", auto3);
     m_chooser.addOption("Auto[Rename Me]", auto4);
     m_chooser.addOption("Auto[Rename Me]", auto5);
@@ -128,8 +135,10 @@ public class RobotContainer {
     switch (m_chooser.getSelected()) {
       default:
       case auto1:
+        auto = middleField;
         break;
       case auto2:
+        auto = allianceZone;
         break;
       case auto3:
         break;
