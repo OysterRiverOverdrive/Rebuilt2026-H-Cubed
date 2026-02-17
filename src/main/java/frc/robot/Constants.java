@@ -32,7 +32,8 @@ public final class Constants {
 
   public static final class AutoConstants {
 
-    public static final double kMaxSpeedMetersPerSecond = 4.8 / 2;
+    public static final double kMaxSpeedMetersPerSecond =
+        DriveConstants.kMaxCapableSpeedMetersPerSecond * 0.5; // 50% of physical capability
     public static final double kMaxAngularSpeedRadiansPerSecond = (2 * Math.PI) / 4;
     public static final double kMaxAccelerationMetersPerSecondSquared = 6;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 2;
@@ -123,10 +124,34 @@ public final class Constants {
       OPERATOR
     }
 
-    // Driving Parameters - Note that these are not the maximum capable speeds of
-    // the robot, rather the allowed maximum speeds
+    // Physical Constants for Speed Calculation
+    // Verify these match your physical robot configuration ---------------------------------------
+    public static final double kWheelDiameterMeters =
+        edu.wpi.first.math.util.Units.inchesToMeters(3.0);
+    public static final double kDrivingMotorPinionTeeth = 13.0; // Options: 12T, 13T, or 14T
+    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60.0;
 
-    public static final double kMaxSpeedMetersPerSecond = 6.8;
+    // REV MAXSwerve Module Internal Gear Ratios
+    public static final double kDrivingMotorSpurGearTeeth = 22.0;
+    public static final double kDrivingMotorBevelPinionTeeth = 15.0;
+    public static final double kDrivingMotorWheelBevelGearTeeth = 45.0;
+
+    // Stage 1: Motor Pinion -> Spur Gear
+    // Stage 2: Bevel Pinion -> Wheel Bevel Gear
+    // Ratio = (Driven / Driver) * (Driven / Driver)
+    public static final double kDrivingMotorReduction =
+        (kDrivingMotorSpurGearTeeth / kDrivingMotorPinionTeeth)
+            * (kDrivingMotorWheelBevelGearTeeth / kDrivingMotorBevelPinionTeeth);
+    // --------------------------------------------------------------------------------------------
+
+    // Calculated Max Speed
+    // Theoretical maximum speed supported by the hardware (Physical Capability)
+    public static final double kMaxCapableSpeedMetersPerSecond =
+        (kDrivingMotorFreeSpeedRps * (kWheelDiameterMeters * Math.PI)) / kDrivingMotorReduction;
+
+    // Max Allowed Speed (Software Limit) - Percentage of physical capability
+    public static final double kMaxSpeedMetersPerSecond = kMaxCapableSpeedMetersPerSecond * 1.0;
+
     public static final double kMaxAngularSpeed = 1.25 * 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 4; // radians per second
@@ -183,29 +208,17 @@ public final class Constants {
 
   // Constants specifically for Swerve Module
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
-    // robot that drives faster).
-    public static final int kDrivingMotorPinionTeeth = 13;
-
     // Invert the turning encoder, since the output shaft rotates in the opposite direction of
     // the steering motor in the MAXSwerve Module.
     public static final boolean kTurningEncoderInverted = true;
 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = 0.0762;
-    public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the
-    // bevel pinion
-    public static final double kDrivingMotorReduction =
-        (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-    public static final double kDriveWheelFreeSpeedRps =
-        (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters) / kDrivingMotorReduction;
     public static final double kDrivingEncoderPositionFactor =
-        (kWheelDiameterMeters * Math.PI) / kDrivingMotorReduction; // meters
+        (DriveConstants.kWheelDiameterMeters * Math.PI)
+            / DriveConstants.kDrivingMotorReduction; // meters
     public static final double kDrivingEncoderVelocityFactor =
-        ((kWheelDiameterMeters * Math.PI) / kDrivingMotorReduction) / 60.0; // meters per second
+        ((DriveConstants.kWheelDiameterMeters * Math.PI) / DriveConstants.kDrivingMotorReduction)
+            / 60.0; // meters per second
     public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
     public static final double kTurningEncoderVelocityFactor =
         (2 * Math.PI) / 60.0; // radians per second
@@ -220,7 +233,7 @@ public final class Constants {
     public static final double kDrivingP = 0.04;
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
-    public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
+    public static final double kDrivingFF = 1 / DriveConstants.kMaxCapableSpeedMetersPerSecond;
     public static final double kDrivingMaxOutput = 1;
     public static final double kDrivingMinOutput = kDrivingMaxOutput * -1;
     public static final double kTurningP = 1;
@@ -238,8 +251,10 @@ public final class Constants {
     // Current limits ---
     // Meant for the electrical side of the drivetrain to make sure that the drivetrain isn't
     // drawing too much power
-    public static final int kDrivingMotorCurrentLimit = 40; // amps
-    public static final int kTurningMotorCurrentLimit = 15; // amps
+    // 50 amps for driving recommended safe limit against brownouts, could go to 60 to prioritize
+    // pushing power
+    public static final int kDrivingMotorCurrentLimit = 50; // amps
+    public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
   public static final class NeoMotorConstants {
