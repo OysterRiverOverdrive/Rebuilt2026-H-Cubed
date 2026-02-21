@@ -20,8 +20,8 @@ public final class Configs {
       drivingConfig
           .encoder
           // Modifies the driving encoder to use meters instead of rotations
-          .positionConversionFactor(ModuleConstants.kWheelCircumferenceMeters)
-          .velocityConversionFactor(ModuleConstants.kWheelCircumferenceMeters);
+          .positionConversionFactor(ModuleConstants.kDriveRotToMeters)
+          .velocityConversionFactor(ModuleConstants.kDriveRPMToMetersPerSecond);
       drivingConfig
           .closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)

@@ -204,7 +204,7 @@ public final class Constants {
     // Driven by bevel pinion gear
     public static final int kWheelBevelGearTeeth = 45;
 
-    // Final gear Ratio
+    // Final gear Ratio (motor rotations times this is wheel rotations)
     public static final double kDriveGearRatio = (kDrivePinionGearTeeth / kDriveSpurGearTeeth)
                 * (kBevelPinionGearTeeth / kWheelBevelGearTeeth);
 
@@ -215,6 +215,11 @@ public final class Constants {
     public static final double kWheelDiameterMeters =
         Distance.ofRelativeUnits(3, Units.Inches).in(Units.Meters);
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
+
+    // Multiply Motor Rotations times this to get drive wheel distance
+    public static final double kDriveRotToMeters = kDriveGearRatio * kWheelCircumferenceMeters;
+    // Multiply Motor RPM times this to get drive wheel Meters Per Second
+    public static final double kDriveRPMToMetersPerSecond = kDriveGearRatio * kWheelCircumferenceMeters / 60;
 
     // Maximum attainable speed of the drive wheel
     public static final double kDriveWheelFreeSpeedRps =
