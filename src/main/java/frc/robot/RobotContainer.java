@@ -39,8 +39,8 @@ public class RobotContainer {
   // Subsystems
   private final VisionSubsystem vision = new VisionSubsystem(new EstimateConsumer());
   private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(vision);
-  private final FeederSubsystem feeder = new FeederSubsystem();
-  private final IntakeSubsystem intakeWheel = new IntakeSubsystem();
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final FeederSubsystem feeder = new FeederSubsystem(intake);
   private final ShooterSubsystem shooter = new ShooterSubsystem(drivetrain);
 
   // Commands
@@ -118,13 +118,13 @@ public class RobotContainer {
     // Intake Wheel Bindings
     cutil
         .triggerSupplier(Controllers.xbox_lt, 0.2, DriveConstants.joysticks.OPERATOR)
-        .onTrue(new IntakeWheelForwardCommand(intakeWheel))
-        .onFalse(new IntakeWheelStopCommand(intakeWheel));
+        .onTrue(new IntakeWheelForwardCommand(intake))
+        .onFalse(new IntakeWheelStopCommand(intake));
 
     cutil
         .supplier(Controllers.xbox_lb, DriveConstants.joysticks.OPERATOR)
-        .onTrue(new IntakeWheelReverseCommand(intakeWheel))
-        .onFalse(new IntakeWheelStopCommand(intakeWheel));
+        .onTrue(new IntakeWheelReverseCommand(intake))
+        .onFalse(new IntakeWheelStopCommand(intake));
 
     // Shooter Bindings
     cutil
@@ -136,6 +136,15 @@ public class RobotContainer {
         .supplier(Controllers.xbox_b, DriveConstants.joysticks.OPERATOR)
         .onTrue(new InstantCommand(() -> shooter.shooterShootCmd()))
         .onFalse(new InstantCommand(() -> shooter.shooterStopCmd()));
+
+    //Intake Lift Bindings
+    cutil
+        .supplier(Controllers.xbox_x, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new IntakeDownCommand(intake));
+
+    cutil
+        .supplier(Controllers.xbox_y, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new IntakeUpCommand(intake));
   }
 
   public Command getAutonomousCommand() {

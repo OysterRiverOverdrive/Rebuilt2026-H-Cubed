@@ -166,7 +166,6 @@ public final class Constants {
     public static final int kIntakeLiftCanId = 15;
     public static final int kIntakeWheelCanId = 16;
     public static final int kShooterMainCanId = 17;
-    public static final int kShooterSecondaryCanId = 18;
     public static final int kFeederWheelCanId = 19;
     public static final int kFeederSpinCanId = 20;
     public static final int kClimberCanId = 21;
@@ -180,7 +179,10 @@ public final class Constants {
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-    public static final double kIntakeLiftP = 0;
+    public static final double kIntakeLiftDownSpeed = 0.1;
+    public static final double kIntakeLiftDownDuration = 0.3;
+    public static final double kIntakeLiftUpSpeed = -1;
+    public static final double kIntakeLiftUpDuration = 2;
     public static final double kIntakeWheelSpeed = 0.6;
     public static final double kFeederWheelSpeed = 0.3;
     public static final double kFeederSpinSpeed = 0.3;

@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.playingwithfusion.BattFuelGauge;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,7 +53,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Battery Voltage", fuelGauge.getVoltage());
     SmartDashboard.putNumber("Battery Charge (%)", fuelGauge.getRemainingChargePct());
     SmartDashboard.putNumber("Battery Cycle Count", fuelGauge.getNumCycles());
-
+    SmartDashboard.putNumber("Battery Current", fuelGauge.getCurrent());
+    SmartDashboard.putNumber("Battery Start Energy", fuelGauge.getMatchStartingEnergy());
+    SmartDashboard.putNumber("Battery End Energy", fuelGauge.getMatchEndingEnergy());
+    SmartDashboard.putNumber("Battery Max Current (Match)", fuelGauge.getMatchMaxCurrent());
+    SmartDashboard.putNumber("Battery Min Voltage (Match)", fuelGauge.getMatchMinVoltage());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -71,7 +74,7 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 

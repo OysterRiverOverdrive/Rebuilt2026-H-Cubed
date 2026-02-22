@@ -4,17 +4,16 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.PersistMode;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
-
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
@@ -48,14 +47,14 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("shoot i", ki);
     SmartDashboard.putNumber("shoot d", kd);
 
-    shooterConfig.idleMode(IdleMode.kCoast)
-    .closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(kp, ki, kd);
-    shooterConfig.encoder.positionConversionFactor(1)
-    .velocityConversionFactor(1);
-    
-    shooterMain.configure(shooterConfig,
-        ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+    shooterConfig
+        .idleMode(IdleMode.kCoast)
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(kp, ki, kd);
+
+    shooterMain.configure(
+        shooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     shooterPID = shooterMain.getClosedLoopController();
   }
@@ -78,9 +77,12 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Shooter Speed", shooterEncoder.getVelocity());
-    
-    double distance = Math.abs(Math.hypot(VisionConstants.autoAimTarget.getY() - drive.getVisionPose().getY(),
-              VisionConstants.autoAimTarget.getX() - drive.getVisionPose().getX()));
+
+    double distance =
+        Math.abs(
+            Math.hypot(
+                VisionConstants.autoAimTarget.getY() - drive.getVisionPose().getY(),
+                VisionConstants.autoAimTarget.getX() - drive.getVisionPose().getX()));
     SmartDashboard.putNumber("Distance to Hub", distance);
     if (distance < 650) {
       SmartDashboard.putBoolean("Can Shoot", true);
