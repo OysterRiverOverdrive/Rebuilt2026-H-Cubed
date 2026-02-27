@@ -52,12 +52,12 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
-  public void intakeUpCmd() {
-    if(!isUp) {
-      intakeLift.set(RobotConstants.kIntakeLiftUpSpeed);
-      isUp = true;
-    }
-  }
+  // public void intakeUpCmd() {
+  //   if(!isUp) {
+  //     intakeLift.set(RobotConstants.kIntakeLiftUpSpeed);
+  //     isUp = true;
+  //   }
+  // }
 
   public void intakeLiftStopCmd() {
     intakeLift.stopMotor();

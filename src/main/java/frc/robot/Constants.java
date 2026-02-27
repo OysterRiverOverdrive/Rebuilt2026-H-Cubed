@@ -7,8 +7,6 @@ package frc.robot;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -95,11 +93,10 @@ public final class Constants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    public static final Pose2d autoAimTarget =
-        new Pose2d(
-            Distance.ofRelativeUnits(13, Units.Meters),
-            Distance.ofRelativeUnits(6, Units.Meters),
-            new Rotation2d());
+    public static final Translation2d autoAimTarget =
+        new Translation2d(
+            Distance.ofRelativeUnits(182, Units.Inches),
+            Distance.ofRelativeUnits(159, Units.Inches));
 
     public static final double kAutoAimP = 0.75;
   }
@@ -171,7 +168,7 @@ public final class Constants {
     public static final int kClimberCanId = 21;
 
     // Used to declare Navx as upside down
-    public static final boolean kGyroReversed = true;
+    public static final boolean kGyroReversed = false;
 
     // Angular offsets of the modules relative to the chassis in radians
     public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;

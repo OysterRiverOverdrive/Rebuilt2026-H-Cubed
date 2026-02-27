@@ -142,9 +142,9 @@ public class RobotContainer {
         .supplier(Controllers.xbox_x, DriveConstants.joysticks.OPERATOR)
         .onTrue(new IntakeDownCommand(intake));
 
-    cutil
-        .supplier(Controllers.xbox_y, DriveConstants.joysticks.OPERATOR)
-        .onTrue(new IntakeUpCommand(intake));
+    // cutil
+    //     .supplier(Controllers.xbox_y, DriveConstants.joysticks.OPERATOR)
+    //     .onTrue(new IntakeUpCommand(intake));
   }
 
   public Command getAutonomousCommand() {

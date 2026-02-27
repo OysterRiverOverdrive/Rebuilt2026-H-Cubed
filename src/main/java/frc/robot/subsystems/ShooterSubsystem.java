@@ -86,10 +86,10 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Distance to Hub", distance);
     if (distance < 650) {
       SmartDashboard.putBoolean("Can Shoot", true);
-      speed = (14.70954 * distance) + 6776.07278;
+      speed = 2/5 * ((14.70954 * distance) + 6776.07278);
     } else {
       SmartDashboard.putBoolean("Can Shoot", false);
-      speed = (14.70954 * 650) + 6776.07278;
+      speed = 2/5 * ((14.70954 * 650) + 6776.07278);
     }
 
     if (activePID) {
