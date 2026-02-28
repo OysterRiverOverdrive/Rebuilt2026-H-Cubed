@@ -10,22 +10,34 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 
 public class FeederSubsystem extends SubsystemBase {
+  private IntakeSubsystem intake;
 
-  private SparkMax feeder = new SparkMax(RobotConstants.kFeederCanId, MotorType.kBrushless);
+  private SparkMax feederWheel =
+      new SparkMax(RobotConstants.kFeederWheelCanId, MotorType.kBrushless);
+  private SparkMax feederSpin = new SparkMax(RobotConstants.kFeederSpinCanId, MotorType.kBrushless);
 
   /** Creates a new FeederSubsystem. */
-  public FeederSubsystem() {}
+  public FeederSubsystem(IntakeSubsystem intake) {
+    this.intake = intake;
+  }
 
   public void feederForwardCmd() {
-    feeder.set(RobotConstants.kFeederSpeed);
+    feederWheel.set(RobotConstants.kFeederWheelSpeed);
+    if (!intake.isUp()) {
+      feederSpin.set(RobotConstants.kFeederSpinSpeed);
+    }
   }
 
   public void feederReverseCmd() {
-    feeder.set(-1 * RobotConstants.kFeederSpeed);
+    feederWheel.set(-1 * RobotConstants.kFeederWheelSpeed);
+    if (!intake.isUp()) {
+      feederSpin.set(-1 * RobotConstants.kFeederSpinSpeed);
+    }
   }
 
   public void feederStopCmd() {
-    feeder.stopMotor();
+    feederWheel.stopMotor();
+    feederSpin.stopMotor();
   }
 
   @Override

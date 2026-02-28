@@ -17,12 +17,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.utils.SwerveModule;
 
 public class DrivetrainSubsystem extends SubsystemBase {
@@ -103,6 +106,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private static final String medium = "3";
   private static final String low = "4";
 
+  private static final SendableChooser<String> m_allianceChooser = new SendableChooser<>();
+  private static final String defaultAlliance = "0";
+  private static final String blueAlliance = "1";
+  private static final String redAlliance = "2";
+
   public static boolean autoAimEnabled = false;
 
   /** Creates a new DriveSubsystem. */
@@ -113,6 +121,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_chooser.addOption("50%", medium);
     m_chooser.addOption("25%", low);
     SmartDashboard.putData("Drive Speed", m_chooser);
+
+    m_allianceChooser.setDefaultOption("Default", defaultAlliance);
+    m_allianceChooser.addOption("Blue", blueAlliance);
+    m_allianceChooser.addOption("Red", redAlliance);
+    SmartDashboard.putData("Alliance", m_allianceChooser);
 
     this.vision = vision;
 
@@ -228,6 +241,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
+
+    if (getAlliance() == Alliance.Blue) {
+      visionOdometry.resetRotation(Rotation2d.fromDegrees(getHeading()));
+    } else {
+      visionOdometry.resetRotation(Rotation2d.fromDegrees(getHeading() + 180));
+    }
   }
 
   public double gyroangle() {
@@ -277,7 +296,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void recalibrateVisionOdometry() {
-    if (vision.estConsumer.isStale()) {
+    if (!vision.estConsumer.isStale()) {
       resetVisionOdometryTranslation(vision.estConsumer.getPose2d().getTranslation());
     }
   }
@@ -326,6 +345,33 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return speed;
   }
 
+  /**
+   * Returns the current alliance as according to the driver station, with smartdashboard as an
+   * override. If none is found, return Blue to prevent crashes
+   *
+   * @return an Alliance object
+   */
+  public static DriverStation.Alliance getAlliance() {
+    if (m_allianceChooser.getSelected() == defaultAlliance
+        && DriverStation.getAlliance().isPresent()) {
+      return DriverStation.getAlliance().get();
+    } else if (m_allianceChooser.getSelected() == blueAlliance) {
+      return Alliance.Blue;
+    } else if (m_allianceChooser.getSelected() == redAlliance) {
+      return Alliance.Red;
+    } else {
+      return Alliance.Blue;
+    }
+  }
+
+  public static Translation2d getAutoAimTarget() {
+    if (getAlliance() == DriverStation.Alliance.Blue) {
+      return VisionConstants.kBlueAllianceHub;
+    } else {
+      return VisionConstants.kRedAllianceHub;
+    }
+  }
+
   public static void toggleAutoAim() {
     autoAimEnabled = !autoAimEnabled;
   }
@@ -347,14 +393,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
         });
 
-    visionOdometry.update(
-        Rotation2d.fromDegrees(getHeading()),
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-        });
+    if (getAlliance() == Alliance.Blue) {
+      visionOdometry.update(
+          Rotation2d.fromDegrees(getHeading()),
+          new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
+          });
+    } else {
+      visionOdometry.update(
+          Rotation2d.fromDegrees(getHeading() + 180),
+          new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
+          });
+    }
 
     if (!visionOdometryInitialPose && vision.estConsumer.initialized) {}
 
