@@ -207,6 +207,8 @@ public final class Constants {
       return ((12.84983 * distance) + 4793.08874);
     }
 
+    public static final double kShooterConstantSpeed = 7000;
+
     public static final double kShooterP = 0.0001;
     public static final double kShooterI = 0;
     public static final double kShooterD = 0;
