@@ -243,10 +243,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_gyro.reset();
 
     if (getAlliance() == Alliance.Blue) {
-      visionOdometry.resetRotation(
-          Rotation2d.fromDegrees(getHeading()));
-    } else {visionOdometry.resetRotation(
-          Rotation2d.fromDegrees(getHeading() + 180));
+      visionOdometry.resetRotation(Rotation2d.fromDegrees(getHeading()));
+    } else {
+      visionOdometry.resetRotation(Rotation2d.fromDegrees(getHeading() + 180));
     }
   }
 
@@ -347,15 +346,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   /**
-   * Returns the current alliance as according to the driver station,
-   * with smartdashboard as an override. If none is found, return Blue to prevent crashes
-   * 
+   * Returns the current alliance as according to the driver station, with smartdashboard as an
+   * override. If none is found, return Blue to prevent crashes
+   *
    * @return an Alliance object
-  */
+   */
   public static DriverStation.Alliance getAlliance() {
     if (m_allianceChooser.getSelected() == defaultAlliance
-      && DriverStation.getAlliance().isPresent()) {
-        return DriverStation.getAlliance().get();
+        && DriverStation.getAlliance().isPresent()) {
+      return DriverStation.getAlliance().get();
     } else if (m_allianceChooser.getSelected() == blueAlliance) {
       return Alliance.Blue;
     } else if (m_allianceChooser.getSelected() == redAlliance) {
@@ -403,7 +402,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
           });
-    } else {visionOdometry.update(
+    } else {
+      visionOdometry.update(
           Rotation2d.fromDegrees(getHeading() + 180),
           new SwerveModulePosition[] {
             m_frontLeft.getPosition(),

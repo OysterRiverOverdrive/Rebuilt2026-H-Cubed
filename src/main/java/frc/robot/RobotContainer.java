@@ -137,7 +137,7 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> shooter.shooterShootCmd()))
         .onFalse(new InstantCommand(() -> shooter.shooterStopCmd()));
 
-    //Intake Lift Bindings
+    // Intake Lift Bindings
     cutil
         .supplier(Controllers.xbox_x, DriveConstants.joysticks.OPERATOR)
         .onTrue(new IntakeDownCommand(intake));

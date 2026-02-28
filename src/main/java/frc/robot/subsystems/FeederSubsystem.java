@@ -23,14 +23,14 @@ public class FeederSubsystem extends SubsystemBase {
 
   public void feederForwardCmd() {
     feederWheel.set(RobotConstants.kFeederWheelSpeed);
-    if(!intake.isUp()) {
+    if (!intake.isUp()) {
       feederSpin.set(RobotConstants.kFeederSpinSpeed);
     }
   }
 
   public void feederReverseCmd() {
     feederWheel.set(-1 * RobotConstants.kFeederWheelSpeed);
-    if(!intake.isUp()) {
+    if (!intake.isUp()) {
       feederSpin.set(-1 * RobotConstants.kFeederSpinSpeed);
     }
   }

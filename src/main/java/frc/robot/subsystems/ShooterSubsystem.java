@@ -72,9 +72,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     double distance =
         (Math.abs(
-            Math.hypot(
-                DrivetrainSubsystem.getAutoAimTarget().getY() - drive.getVisionPose().getY(),
-                DrivetrainSubsystem.getAutoAimTarget().getX() - drive.getVisionPose().getX())))*100;
+                Math.hypot(
+                    DrivetrainSubsystem.getAutoAimTarget().getY() - drive.getVisionPose().getY(),
+                    DrivetrainSubsystem.getAutoAimTarget().getX() - drive.getVisionPose().getX())))
+            * 100;
     SmartDashboard.putNumber("Distance to Hub", distance);
     if (distance < ShooterConstants.kShooterMaxDistance) {
       SmartDashboard.putBoolean("Can Shoot", true);

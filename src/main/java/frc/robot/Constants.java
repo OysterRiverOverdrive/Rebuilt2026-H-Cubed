@@ -199,12 +199,12 @@ public final class Constants {
 
     /**
      * Calculates the speed to give the shooter based on distance from the hub
-     * 
+     *
      * @param distance the robot's distance form the hub in centimeters
      * @return the speed to give the shooter
      */
     public static double getShooterSpeed(double distance) {
-        return ((12.84983 * distance) + 4793.08874);
+      return ((12.84983 * distance) + 4793.08874);
     }
 
     public static final double kShooterP = 0.0001;

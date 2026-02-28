@@ -10,7 +10,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
@@ -20,8 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private SparkMax intakeWheel =
       new SparkMax(RobotConstants.kIntakeWheelCanId, MotorType.kBrushless);
-  private SparkMax intakeLift =
-      new SparkMax(RobotConstants.kIntakeLiftCanId, MotorType.kBrushless);
+  private SparkMax intakeLift = new SparkMax(RobotConstants.kIntakeLiftCanId, MotorType.kBrushless);
 
   private SparkMaxConfig liftConfig = new SparkMaxConfig();
 
@@ -46,7 +44,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void intakeDownCmd() {
-    if(isUp) {
+    if (isUp) {
       intakeLift.set(RobotConstants.kIntakeLiftDownSpeed);
       isUp = false;
     }
