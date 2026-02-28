@@ -17,7 +17,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -34,24 +34,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private boolean activePID;
 
-  private double kp = 0.0001;
-  private double ki = 0;
-  private double kd = 0;
-
   private DrivetrainSubsystem drive;
 
   public ShooterSubsystem(DrivetrainSubsystem drive) {
     this.drive = drive;
 
-    SmartDashboard.putNumber("shoot p", kp);
-    SmartDashboard.putNumber("shoot i", ki);
-    SmartDashboard.putNumber("shoot d", kd);
-
     shooterConfig
         .idleMode(IdleMode.kCoast)
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(kp, ki, kd);
+        .pid(ShooterConstants.kShooterP, ShooterConstants.kShooterI, ShooterConstants.kShooterD);
 
     shooterMain.configure(
         shooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -60,7 +52,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void shooterDislodgeCmd() {
-    shooterMain.set(0.2);
+    shooterMain.set(ShooterConstants.kShooterDislodgeSpeed);
   }
 
   public void shooterShootCmd() {
@@ -79,17 +71,17 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Speed", shooterEncoder.getVelocity());
 
     double distance =
-        Math.abs(
+        (Math.abs(
             Math.hypot(
-                VisionConstants.autoAimTarget.getY() - drive.getVisionPose().getY(),
-                VisionConstants.autoAimTarget.getX() - drive.getVisionPose().getX()));
+                DrivetrainSubsystem.getAutoAimTarget().getY() - drive.getVisionPose().getY(),
+                DrivetrainSubsystem.getAutoAimTarget().getX() - drive.getVisionPose().getX())))*100;
     SmartDashboard.putNumber("Distance to Hub", distance);
-    if (distance < 650) {
+    if (distance < ShooterConstants.kShooterMaxDistance) {
       SmartDashboard.putBoolean("Can Shoot", true);
-      speed = 2/5 * ((14.70954 * distance) + 6776.07278);
+      speed = ShooterConstants.getShooterSpeed(distance);
     } else {
       SmartDashboard.putBoolean("Can Shoot", false);
-      speed = 2/5 * ((14.70954 * 650) + 6776.07278);
+      speed = ShooterConstants.getShooterSpeed(ShooterConstants.kShooterMaxDistance);
     }
 
     if (activePID) {

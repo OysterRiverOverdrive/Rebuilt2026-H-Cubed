@@ -54,8 +54,8 @@ public class TeleopCmd extends Command {
       // Calculate the angle from the robot to the target
       double angleToTarget =
           Math.atan2(
-              VisionConstants.autoAimTarget.getY() - driveSub.getVisionPose().getY(),
-              VisionConstants.autoAimTarget.getX() - driveSub.getVisionPose().getX());
+              DrivetrainSubsystem.getAutoAimTarget().getY() - driveSub.getVisionPose().getY(),
+              DrivetrainSubsystem.getAutoAimTarget().getX() - driveSub.getVisionPose().getX());
 
       // Calculate the angle difference (how much we need to rotate)
       double angleError =

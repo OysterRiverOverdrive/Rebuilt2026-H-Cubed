@@ -10,18 +10,18 @@ public class EstimateConsumer {
   double timestamp;
   Matrix<N3, N1> estimationStdDevs;
   boolean initialized = false;
-  boolean stale = true;
+  int stale = 0;
 
   public void accept(Pose2d pose, double timestamp, Matrix<N3, N1> estimationStdDevs) {
     this.pose = pose;
     this.timestamp = timestamp;
     this.estimationStdDevs = estimationStdDevs;
     initialized = true;
-    stale = false;
+    stale = 0;
   }
 
   public void setStale() {
-    stale = true;
+    stale += 1;
   }
 
   public boolean isInitialized() {
@@ -29,7 +29,11 @@ public class EstimateConsumer {
   }
 
   public boolean isStale() {
-    return stale;
+    if (stale >= 2) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public Pose2d getPose2d() {

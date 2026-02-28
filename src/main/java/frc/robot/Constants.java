@@ -93,12 +93,17 @@ public final class Constants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    public static final Translation2d autoAimTarget =
+    public static final Translation2d kBlueAllianceHub =
         new Translation2d(
-            Distance.ofRelativeUnits(182, Units.Inches),
-            Distance.ofRelativeUnits(159, Units.Inches));
+            Distance.ofRelativeUnits(182.105, Units.Inches),
+            Distance.ofRelativeUnits(158.84, Units.Inches));
 
-    public static final double kAutoAimP = 0.75;
+    public static final Translation2d kRedAllianceHub =
+        new Translation2d(
+            Distance.ofRelativeUnits(469.115, Units.Inches),
+            Distance.ofRelativeUnits(158.84, Units.Inches));
+
+    public static final double kAutoAimP = 1;
   }
 
   // Constants specifically for Driving & Operation
@@ -123,7 +128,7 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
 
-    public static final double kMaxSpeedMetersPerSecond = 6.8;
+    public static final double kMaxSpeedMetersPerSecond = 15;
     public static final double kMaxAngularSpeed = 1.25 * 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 4; // radians per second
@@ -184,6 +189,27 @@ public final class Constants {
     public static final double kFeederWheelSpeed = 0.3;
     public static final double kFeederSpinSpeed = 0.3;
     public static final double kClimberSpeed = 0.3;
+  }
+
+  public static final class ShooterConstants {
+    public static final double kShooterDislodgeSpeed = 0.2;
+
+    // Maximum distance the shooter can shoot at in centimeters
+    public static final double kShooterMaxDistance = 850;
+
+    /**
+     * Calculates the speed to give the shooter based on distance from the hub
+     * 
+     * @param distance the robot's distance form the hub in centimeters
+     * @return the speed to give the shooter
+     */
+    public static double getShooterSpeed(double distance) {
+        return ((12.84983 * distance) + 4793.08874);
+    }
+
+    public static final double kShooterP = 0.0001;
+    public static final double kShooterI = 0;
+    public static final double kShooterD = 0;
   }
 
   // Constants specifically for Swerve Module

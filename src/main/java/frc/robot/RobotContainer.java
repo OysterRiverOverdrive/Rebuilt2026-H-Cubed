@@ -122,7 +122,7 @@ public class RobotContainer {
         .onFalse(new IntakeWheelStopCommand(intake));
 
     cutil
-        .supplier(Controllers.xbox_lb, DriveConstants.joysticks.OPERATOR)
+        .triggerSupplier(Controllers.xbox_lt, 0.2, DriveConstants.joysticks.DRIVER)
         .onTrue(new IntakeWheelReverseCommand(intake))
         .onFalse(new IntakeWheelStopCommand(intake));
 
