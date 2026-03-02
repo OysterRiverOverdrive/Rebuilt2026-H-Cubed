@@ -32,7 +32,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double speed;
 
-  private boolean activePID;
+  public static boolean activePID = false;
+  private boolean constantShoot = false;
 
   private DrivetrainSubsystem drive;
 
@@ -57,6 +58,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void shooterShootCmd() {
     activePID = true;
+    constantShoot = false;
+  }
+
+  public void shooterConstantShootCmd() {
+    activePID = true;
+    constantShoot = true;
   }
 
   public void shooterStopCmd() {
@@ -77,12 +84,17 @@ public class ShooterSubsystem extends SubsystemBase {
                     DrivetrainSubsystem.getAutoAimTarget().getX() - drive.getVisionPose().getX())))
             * 100;
     SmartDashboard.putNumber("Distance to Hub", distance);
-    if (distance < ShooterConstants.kShooterMaxDistance) {
-      SmartDashboard.putBoolean("Can Shoot", true);
-      speed = ShooterConstants.getShooterSpeed(distance);
+
+    if (!constantShoot) {
+      if (distance < ShooterConstants.kShooterMaxDistance) {
+        SmartDashboard.putBoolean("Can Shoot", true);
+        speed = ShooterConstants.getShooterSpeed(distance);
+      } else {
+        SmartDashboard.putBoolean("Can Shoot", false);
+        speed = ShooterConstants.getShooterSpeed(ShooterConstants.kShooterMaxDistance);
+      }
     } else {
-      SmartDashboard.putBoolean("Can Shoot", false);
-      speed = ShooterConstants.getShooterSpeed(ShooterConstants.kShooterMaxDistance);
+      speed = ShooterConstants.kShooterConstantSpeed;
     }
 
     if (activePID) {
