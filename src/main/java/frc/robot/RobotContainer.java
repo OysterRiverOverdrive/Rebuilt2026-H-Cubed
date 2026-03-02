@@ -16,16 +16,14 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.auto.*;
 import frc.robot.auto.plans.AutoAllianceZonePlan;
 import frc.robot.auto.plans.AutoMiddleFieldPlan;
-import frc.robot.auto.plans.AutoNierAutomataPlan;
 // import frc.robot.auto.plans.*;
-import frc.robot.commands.IntakeWheel.IntakeWheelForwardCommand;
-import frc.robot.commands.IntakeWheel.IntakeWheelReverseCommand;
-import frc.robot.commands.IntakeWheel.IntakeWheelStopCommand;
+import frc.robot.commands.intake.IntakeWheelForwardCommand;
+import frc.robot.commands.intake.IntakeWheelReverseCommand;
+import frc.robot.commands.intake.IntakeWheelStopCommand;
 import frc.robot.commands.TeleopCmd;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.EstimateConsumer;
-import frc.robot.subsystems.IntakeWheelSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.commands.feeder.*;
+import frc.robot.commands.intake.*;
+import frc.robot.subsystems.*;
 import frc.utils.ControllerUtils;
 import org.littletonrobotics.urcl.URCL;
 
@@ -47,7 +45,9 @@ public class RobotContainer {
   // Subsystems
   private final VisionSubsystem vision = new VisionSubsystem(new EstimateConsumer());
   private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(vision);
-  private final IntakeWheelSubsystem intakeWheel = new IntakeWheelSubsystem();
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final FeederSubsystem feeder = new FeederSubsystem(intake);
+  private final ShooterSubsystem shooter = new ShooterSubsystem(drivetrain);
 
   // Commands
   private final TeleopCmd teleopCmd =
@@ -114,16 +114,52 @@ public class RobotContainer {
         .supplier(Controllers.xbox_a, DriveConstants.joysticks.DRIVER)
         .onTrue(new InstantCommand(() -> DrivetrainSubsystem.toggleAutoAim()));
 
-    // Intake Wheel Bindings
+    // Feeder Bindings
     cutil
-        .supplier(Controllers.xbox_lb, DriveConstants.joysticks.OPERATOR)
-        .onTrue(new IntakeWheelForwardCommand(intakeWheel))
-        .onFalse(new IntakeWheelStopCommand(intakeWheel));
+        .triggerSupplier(Controllers.xbox_rt, 0.2, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new FeederForwardCommand(feeder))
+        .onFalse(new FeederStopCommand(feeder));
 
     cutil
         .supplier(Controllers.xbox_rb, DriveConstants.joysticks.OPERATOR)
-        .onTrue(new IntakeWheelReverseCommand(intakeWheel))
-        .onFalse(new IntakeWheelStopCommand(intakeWheel));
+        .onTrue(new FeederReverseCommand(feeder))
+        .onFalse(new FeederStopCommand(feeder));
+
+    // Intake Wheel Bindings
+    cutil
+        .triggerSupplier(Controllers.xbox_lt, 0.2, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new IntakeWheelForwardCommand(intake))
+        .onFalse(new IntakeWheelStopCommand(intake));
+
+    cutil
+        .triggerSupplier(Controllers.xbox_lt, 0.2, DriveConstants.joysticks.DRIVER)
+        .onTrue(new IntakeWheelReverseCommand(intake))
+        .onFalse(new IntakeWheelStopCommand(intake));
+
+    // Shooter Bindings
+    cutil
+        .supplier(Controllers.xbox_a, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new InstantCommand(() -> shooter.shooterDislodgeCmd()))
+        .onFalse(new InstantCommand(() -> shooter.shooterStopCmd()));
+
+    cutil
+        .supplier(Controllers.xbox_b, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new InstantCommand(() -> shooter.shooterShootCmd()))
+        .onFalse(new InstantCommand(() -> shooter.shooterStopCmd()));
+
+    cutil
+        .supplier(Controllers.xbox_y, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new InstantCommand(() -> shooter.shooterConstantShootCmd()))
+        .onFalse(new InstantCommand(() -> shooter.shooterStopCmd()));
+
+    // Intake Lift Bindings
+    cutil
+        .supplier(Controllers.xbox_x, DriveConstants.joysticks.OPERATOR)
+        .onTrue(new IntakeDownCommand(intake));
+
+    // cutil
+    //     .supplier(Controllers.xbox_y, DriveConstants.joysticks.OPERATOR)
+    //     .onTrue(new IntakeUpCommand(intake));
   }
 
   public Command getAutonomousCommand() {

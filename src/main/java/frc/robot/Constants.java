@@ -7,8 +7,6 @@ package frc.robot;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -52,42 +50,42 @@ public final class Constants {
     // back right is camera 3, front right is camera 4
     public static final Transform3d kRobotToCam1 =
         new Transform3d(
-            Distance.ofRelativeUnits(11, Units.Inches),
-            Distance.ofRelativeUnits(11, Units.Inches),
-            Distance.ofRelativeUnits(24, Units.Centimeters),
+            Distance.ofRelativeUnits(11.5, Units.Inches),
+            Distance.ofRelativeUnits(11.5, Units.Inches),
+            Distance.ofRelativeUnits(9.5, Units.Inches),
             new Rotation3d(
                 Angle.ofRelativeUnits(0, Units.Degrees),
-                Angle.ofRelativeUnits(30, Units.Degrees),
+                Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(45, Units.Degrees)));
 
     public static final Transform3d kRobotToCam2 =
         new Transform3d(
-            Distance.ofRelativeUnits(-11, Units.Inches),
-            Distance.ofRelativeUnits(11, Units.Inches),
-            Distance.ofRelativeUnits(24, Units.Centimeters),
+            Distance.ofRelativeUnits(-11.5, Units.Inches),
+            Distance.ofRelativeUnits(11.5, Units.Inches),
+            Distance.ofRelativeUnits(9.5, Units.Inches),
             new Rotation3d(
                 Angle.ofRelativeUnits(0, Units.Degrees),
-                Angle.ofRelativeUnits(30, Units.Degrees),
+                Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(135, Units.Degrees)));
 
     public static final Transform3d kRobotToCam3 =
         new Transform3d(
-            Distance.ofRelativeUnits(-11, Units.Inches),
-            Distance.ofRelativeUnits(-11, Units.Inches),
-            Distance.ofRelativeUnits(24, Units.Centimeters),
+            Distance.ofRelativeUnits(-11.5, Units.Inches),
+            Distance.ofRelativeUnits(-11.5, Units.Inches),
+            Distance.ofRelativeUnits(9.5, Units.Inches),
             new Rotation3d(
                 Angle.ofRelativeUnits(0, Units.Degrees),
-                Angle.ofRelativeUnits(30, Units.Degrees),
+                Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(225, Units.Degrees)));
 
     public static final Transform3d kRobotToCam4 =
         new Transform3d(
-            Distance.ofRelativeUnits(11, Units.Inches),
-            Distance.ofRelativeUnits(-11, Units.Inches),
-            Distance.ofRelativeUnits(24, Units.Centimeters),
+            Distance.ofRelativeUnits(11.5, Units.Inches),
+            Distance.ofRelativeUnits(-11.5, Units.Inches),
+            Distance.ofRelativeUnits(9.5, Units.Inches),
             new Rotation3d(
                 Angle.ofRelativeUnits(0, Units.Degrees),
-                Angle.ofRelativeUnits(30, Units.Degrees),
+                Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(315, Units.Degrees)));
 
     // The standard deviations of our vision estimated poses, which affect correction rate
@@ -95,13 +93,17 @@ public final class Constants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    public static final Pose2d autoAimTarget =
-        new Pose2d(
-            Distance.ofRelativeUnits(13, Units.Meters),
-            Distance.ofRelativeUnits(6, Units.Meters),
-            new Rotation2d());
+    public static final Translation2d kBlueAllianceHub =
+        new Translation2d(
+            Distance.ofRelativeUnits(182.105, Units.Inches),
+            Distance.ofRelativeUnits(158.84, Units.Inches));
 
-    public static final double kAutoAimP = 0.75;
+    public static final Translation2d kRedAllianceHub =
+        new Translation2d(
+            Distance.ofRelativeUnits(469.115, Units.Inches),
+            Distance.ofRelativeUnits(158.84, Units.Inches));
+
+    public static final double kAutoAimP = 1;
   }
 
   // Constants specifically for Driving & Operation
@@ -126,7 +128,7 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
 
-    public static final double kMaxSpeedMetersPerSecond = 6.8;
+    public static final double kMaxSpeedMetersPerSecond = 15;
     public static final double kMaxAngularSpeed = 1.25 * 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 4; // radians per second
@@ -163,12 +165,15 @@ public final class Constants {
     public static final int kRearLeftDrivingCanId = 9;
     public static final int kRearLeftTurningCanId = 8;
 
-    public static final int kFlywheelCanId = 9;
-    public static final int kIntakeWheelCanId = 10;
-    public static final int kFeederCanId = 11;
+    public static final int kIntakeLiftCanId = 15;
+    public static final int kIntakeWheelCanId = 16;
+    public static final int kShooterMainCanId = 17;
+    public static final int kFeederWheelCanId = 19;
+    public static final int kFeederSpinCanId = 20;
+    public static final int kClimberCanId = 21;
 
     // Used to declare Navx as upside down
-    public static final boolean kGyroReversed = true;
+    public static final boolean kGyroReversed = false;
 
     // Angular offsets of the modules relative to the chassis in radians
     public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
@@ -176,9 +181,37 @@ public final class Constants {
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-    public static final double kFlywheelSpeed = 0.5;
-    public static final double kIntakeWheelSpeed = 0.5;
-    public static final double kFeederSpeed = 0.5;
+    public static final double kIntakeLiftDownSpeed = 0.1;
+    public static final double kIntakeLiftDownDuration = 0.3;
+    public static final double kIntakeLiftUpSpeed = -1;
+    public static final double kIntakeLiftUpDuration = 2;
+    public static final double kIntakeWheelSpeed = 0.6;
+    public static final double kFeederWheelSpeed = 0.3;
+    public static final double kFeederSpinSpeed = 0.3;
+    public static final double kClimberSpeed = 0.3;
+  }
+
+  public static final class ShooterConstants {
+    public static final double kShooterDislodgeSpeed = 0.2;
+
+    // Maximum distance the shooter can shoot at in centimeters
+    public static final double kShooterMaxDistance = 850;
+
+    /**
+     * Calculates the speed to give the shooter based on distance from the hub
+     *
+     * @param distance the robot's distance form the hub in centimeters
+     * @return the speed to give the shooter
+     */
+    public static double getShooterSpeed(double distance) {
+      return ((12.84983 * distance) + 4793.08874);
+    }
+
+    public static final double kShooterConstantSpeed = 7000;
+
+    public static final double kShooterP = 0.0001;
+    public static final double kShooterI = 0;
+    public static final double kShooterD = 0;
   }
 
   // Constants specifically for Swerve Module
