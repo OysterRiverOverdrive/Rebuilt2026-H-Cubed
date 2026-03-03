@@ -14,9 +14,16 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.auto.*;
+import frc.robot.auto.plans.AutoAllianceZonePlan;
+import frc.robot.auto.plans.AutoForwardPlan;
+import frc.robot.auto.plans.AutoMiddleFieldPlan;
+// import frc.robot.auto.plans.*;
 import frc.robot.commands.TeleopCmd;
 import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.*;
+import frc.robot.commands.intake.IntakeWheelForwardCommand;
+import frc.robot.commands.intake.IntakeWheelReverseCommand;
+import frc.robot.commands.intake.IntakeWheelStopCommand;
 import frc.robot.subsystems.*;
 import frc.utils.ControllerUtils;
 import org.littletonrobotics.urcl.URCL;
@@ -57,6 +64,12 @@ public class RobotContainer {
   // https://www.chiefdelphi.com/t/2026-playing-with-fusion-product-launch-advanced-battery-solution/507717/115
   private final TimeOfFlight tof = new TimeOfFlight(0);
 
+  // AUTOS
+  private final AutoMiddleFieldPlan middleField =
+      new AutoMiddleFieldPlan(drivetrain, intake, feeder, shooter);
+  private final AutoAllianceZonePlan allianceZone = new AutoAllianceZonePlan();
+  private final AutoForwardPlan forward = new AutoForwardPlan(drivetrain);
+
   public RobotContainer() {
 
     DataLogManager.start();
@@ -74,9 +87,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(teleopCmd);
 
     // Add Auto options to dropdown and push to dashboard
-    m_chooser.setDefaultOption("Auto[Rename Me]", auto1);
-    m_chooser.addOption("Auto[Rename Me]", auto2);
-    m_chooser.addOption("Auto[Rename Me]", auto3);
+    m_chooser.setDefaultOption("Go Forward", auto1);
+    m_chooser.addOption("Middle", auto2);
+    m_chooser.addOption("Alliance Side", auto3);
     m_chooser.addOption("Auto[Rename Me]", auto4);
     m_chooser.addOption("Auto[Rename Me]", auto5);
     m_chooser.addOption("Auto[Rename Me]", auto6);
@@ -161,10 +174,13 @@ public class RobotContainer {
     switch (m_chooser.getSelected()) {
       default:
       case auto1:
+        auto = forward;
         break;
       case auto2:
+        auto = middleField;
         break;
       case auto3:
+        auto = allianceZone;
         break;
       case auto4:
         break;
