@@ -6,20 +6,20 @@ package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AutoIntakeForwardCmd extends Command {
-  private IntakeSubsystem intake;
+public class AutoConstantShootCmd extends Command {
+  private ShooterSubsystem shooter;
   private Timer timer = new Timer();
   private double duration;
 
   /** Creates a new AutoIntakeForwardCmd. */
-  public AutoIntakeForwardCmd(
-      IntakeSubsystem intake, double duration) { // spins the intake wheel for (duration) seconds
-    this.intake = intake;
+  public AutoConstantShootCmd(
+      ShooterSubsystem shooter, double duration) { // spins the shooter wheel for (duration) seconds
+    this.shooter = shooter;
     this.duration = duration;
-    addRequirements(intake);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -32,13 +32,13 @@ public class AutoIntakeForwardCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.intakeWheelForwardCmd();
+    shooter.shooterConstantShootCmd();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.intakeWheelStopCmd();
+    shooter.shooterStopCmd();
   }
 
   // Returns true when the command should end.

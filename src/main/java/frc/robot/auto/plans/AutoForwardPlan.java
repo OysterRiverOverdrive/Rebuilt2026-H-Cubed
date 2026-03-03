@@ -16,24 +16,14 @@ import java.util.List;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoNierAutomataPlan extends ParallelCommandGroup { // THIS IS JUST A TEST DON'T USE IT IN A MATCH
-  /** Creates a new AutoNierAutomataPlan. */
-  public AutoNierAutomataPlan(DrivetrainSubsystem drive) {
-
-    Command foo =
+public class AutoForwardPlan extends ParallelCommandGroup {
+  /** Creates a new AutoForwardPlan. */
+  public AutoForwardPlan(DrivetrainSubsystem drive) {
+    Command goForward =
         AutoCreationCmd.AutoRobotDriveCmd(
-            drive,
-            List.of(new Translation2d(1, 0)),
-            new Pose2d(1, 1, new Rotation2d(-Math.PI / 2)));
-    Command spinny = 
-      AutoCreationCmd.AutoRobotDriveCmd(
-        drive,
-        List.of(new Translation2d(0, 0)),
-        new Pose2d(1, 1, new Rotation2d(-Math.PI * 4))
-        );
-
-    addCommands(
-      foo
-        .andThen(spinny));
+            drive, List.of(new Translation2d(1.0, 0.0)), new Pose2d(2.0, 0.0, new Rotation2d()));
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(goForward);
   }
 }
