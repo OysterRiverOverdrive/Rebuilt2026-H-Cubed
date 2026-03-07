@@ -11,11 +11,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class AutoAllianceZonePlan extends ParallelCommandGroup {
   // subsystems
-  private final IntakeSubsystem intakewheel = new IntakeSubsystem();
-
-  public AutoAllianceZonePlan() {
+  
+  public AutoAllianceZonePlan(IntakeSubsystem intake) {
     Command spinIntake = // spin the wheel kronk
-        new AutoIntakeForwardCmd(intakewheel, 5);
+        new AutoIntakeForwardCmd(intake, 5);
 
     addCommands(spinIntake);
   }

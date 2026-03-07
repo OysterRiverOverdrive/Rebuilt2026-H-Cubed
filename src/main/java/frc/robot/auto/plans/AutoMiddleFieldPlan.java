@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.auto.AutoConstantShootCmd;
 import frc.robot.auto.AutoCreationCmd;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+
 import java.util.List;
 
 public class AutoMiddleFieldPlan extends ParallelCommandGroup {
@@ -32,12 +34,12 @@ public class AutoMiddleFieldPlan extends ParallelCommandGroup {
             .AutoRobotDriveCmd( // start from top threshhold, go to middle, turn to the right along
                 // the way
                 drive,
-                List.of(new Translation2d(4.125, 0)),
-                new Pose2d(8.25, -8.0, new Rotation2d(-Math.PI / 2)));
+                List.of(new Translation2d(2.5, 0)),
+                new Pose2d(3.2, -0.25, new Rotation2d(-Math.PI / 2)));
 
     Command moveDown =
         AutoCreationCmd.AutoRobotDriveCmd( // move down to where the balls are
-            drive, List.of(new Translation2d(0, -3.0)), new Pose2d(8.25, 5.0, new Rotation2d(0)));
+            drive, List.of(new Translation2d(3.0, 0)), new Pose2d(4.5, 0, new Rotation2d(0)));
 
     Command lowerIntake = new IntakeDownCommand(intake);
 
@@ -50,7 +52,8 @@ public class AutoMiddleFieldPlan extends ParallelCommandGroup {
     Command constantShoot = new AutoConstantShootCmd(shooter, 8);
 
     addCommands(
-        toMid
+      new InstantCommand(() -> drive.recalibrateVisionOdometry())
+            .andThen(toMid)
             .andThen(lowerIntake)
             .andThen(moveDown.alongWith(spinIntakeWheel))
             .andThen(spinFeeder.alongWith(constantShoot)));

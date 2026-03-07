@@ -67,8 +67,8 @@ public class RobotContainer {
   // AUTOS
   private final AutoMiddleFieldPlan middleField =
       new AutoMiddleFieldPlan(drivetrain, intake, feeder, shooter);
-  private final AutoAllianceZonePlan allianceZone = new AutoAllianceZonePlan();
-  private final AutoForwardPlan forward = new AutoForwardPlan(drivetrain);
+  private final AutoAllianceZonePlan allianceZone = new AutoAllianceZonePlan(intake);
+  private final AutoForwardPlan forward = new AutoForwardPlan(drivetrain, feeder, shooter, intake);
 
   public RobotContainer() {
 
@@ -87,10 +87,10 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(teleopCmd);
 
     // Add Auto options to dropdown and push to dashboard
-    m_chooser.setDefaultOption("Go Forward", auto1);
-    m_chooser.addOption("Middle", auto2);
-    m_chooser.addOption("Alliance Side", auto3);
-    m_chooser.addOption("Auto[Rename Me]", auto4);
+    m_chooser.setDefaultOption("Do Nothing", auto1);
+    m_chooser.addOption("Go Forward", auto2);
+    m_chooser.addOption("Middle", auto3);
+    m_chooser.addOption("Alliance Side", auto4);
     m_chooser.addOption("Auto[Rename Me]", auto5);
     m_chooser.addOption("Auto[Rename Me]", auto6);
     m_chooser.addOption("Auto[Rename Me]", auto7);
@@ -114,7 +114,7 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> drivetrain.recalibrateVisionOdometry()));
 
     cutil
-        .supplier(Controllers.xbox_a, DriveConstants.joysticks.DRIVER)
+        .supplier(Controllers.xbox_b, DriveConstants.joysticks.DRIVER)
         .onTrue(new InstantCommand(() -> DrivetrainSubsystem.toggleAutoAim()));
 
     // Feeder Bindings
@@ -135,7 +135,7 @@ public class RobotContainer {
         .onFalse(new IntakeWheelStopCommand(intake));
 
     cutil
-        .triggerSupplier(Controllers.xbox_lt, 0.2, DriveConstants.joysticks.DRIVER)
+        .supplier(Controllers.xbox_lb, DriveConstants.joysticks.OPERATOR)
         .onTrue(new IntakeWheelReverseCommand(intake))
         .onFalse(new IntakeWheelStopCommand(intake));
 
@@ -174,15 +174,16 @@ public class RobotContainer {
     switch (m_chooser.getSelected()) {
       default:
       case auto1:
-        auto = forward;
+        auto = new BeginSleepCmd(drivetrain, 0);
         break;
       case auto2:
-        auto = middleField;
+        auto = forward;
         break;
       case auto3:
-        auto = allianceZone;
+        auto = middleField;
         break;
       case auto4:
+      auto = allianceZone;
         break;
       case auto5:
         break;

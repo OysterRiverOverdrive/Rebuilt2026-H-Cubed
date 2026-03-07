@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AutoConstantShootCmd extends Command {
+public class AutoDistanceShootCmd extends Command {
   private ShooterSubsystem shooter;
   private Timer timer = new Timer();
   private double duration;
 
   /** Creates a new AutoIntakeForwardCmd. */
-  public AutoConstantShootCmd(
+  public AutoDistanceShootCmd(
       ShooterSubsystem shooter, double duration) { // spins the shooter wheel for (duration) seconds
     this.shooter = shooter;
     this.duration = duration;
@@ -27,7 +27,7 @@ public class AutoConstantShootCmd extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
-    shooter.shooterConstantShootCmd();
+    shooter.shooterShootCmd();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
