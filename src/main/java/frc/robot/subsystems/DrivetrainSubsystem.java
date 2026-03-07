@@ -95,7 +95,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
           },
           new Pose2d(10, 2, new Rotation2d()),
         VecBuilder.fill(0.1, 0.1, 0.1),
-        VecBuilder.fill(0.6, 0.6, 0.6));
+        VecBuilder.fill(0.9, 0.9, 0.9));
 
   boolean visionOdometryInitialPose = false;
 
@@ -247,9 +247,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_gyro.reset();
 
     if (getAlliance() == Alliance.Blue) {
-      visionOdometry.resetRotation(Rotation2d.fromDegrees(getHeading()));
+      visionOdometry.resetRotation(Rotation2d.fromDegrees(0));
     } else {
-      visionOdometry.resetRotation(Rotation2d.fromDegrees(getHeading() + 180));
+      visionOdometry.resetRotation(Rotation2d.fromDegrees(180));
     }
   }
 

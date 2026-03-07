@@ -51,14 +51,14 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     SmartDashboard.putString("Battery ID", fuelGauge.getNickname());
-    // SmartDashboard.putNumber("Battery Voltage", fuelGauge.getVoltage());
-    // SmartDashboard.putNumber("Battery Charge (%)", fuelGauge.getRemainingChargePct());
-    // SmartDashboard.putNumber("Battery Cycle Count", fuelGauge.getNumCycles());
-    // SmartDashboard.putNumber("Battery Current", fuelGauge.getCurrent());
-    // SmartDashboard.putNumber("Battery Start Energy", fuelGauge.getMatchStartingEnergy());
-    // SmartDashboard.putNumber("Battery End Energy", fuelGauge.getMatchEndingEnergy());
-    // SmartDashboard.putNumber("Battery Max Current (Match)", fuelGauge.getMatchMaxCurrent());
-    // SmartDashboard.putNumber("Battery Min Voltage (Match)", fuelGauge.getMatchMinVoltage());
+    SmartDashboard.putNumber("Battery Voltage", fuelGauge.getVoltage());
+    SmartDashboard.putNumber("Battery Charge (%)", fuelGauge.getRemainingChargePct());
+    SmartDashboard.putNumber("Battery Cycle Count", fuelGauge.getNumCycles());
+    SmartDashboard.putNumber("Battery Current", fuelGauge.getCurrent());
+    SmartDashboard.putNumber("Battery Start Energy", fuelGauge.getMatchStartingEnergy());
+    SmartDashboard.putNumber("Battery End Energy", fuelGauge.getMatchEndingEnergy());
+    SmartDashboard.putNumber("Battery Max Current (Match)", fuelGauge.getMatchMaxCurrent());
+    SmartDashboard.putNumber("Battery Min Voltage (Match)", fuelGauge.getMatchMinVoltage());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
