@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -91,7 +93,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
           },
-          new Pose2d(10, 2, new Rotation2d()));
+          new Pose2d(10, 2, new Rotation2d()),
+        VecBuilder.fill(0.1, 0.1, 0.1),
+        VecBuilder.fill(0.6, 0.6, 0.6));
 
   boolean visionOdometryInitialPose = false;
 
