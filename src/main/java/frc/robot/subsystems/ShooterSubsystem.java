@@ -34,6 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public static boolean activePID = false;
   private boolean constantShoot = false;
+  private double constantShootValue = ShooterConstants.kShooterConstantSpeed;
 
   private DrivetrainSubsystem drive;
 
@@ -64,6 +65,13 @@ public class ShooterSubsystem extends SubsystemBase {
   public void shooterConstantShootCmd() {
     activePID = true;
     constantShoot = true;
+    constantShootValue = ShooterConstants.kShooterConstantSpeed;
+  }
+
+  public void shooterSpecializedConstantShootCmd() {
+    activePID = true;
+    constantShoot = true;
+    constantShootValue = ShooterConstants.kShooterSpecializedConstantSpeed;
   }
 
   public void shooterStopCmd() {
@@ -94,7 +102,7 @@ public class ShooterSubsystem extends SubsystemBase {
         speed = ShooterConstants.getShooterSpeed(ShooterConstants.kShooterMaxDistance);
       }
     } else {
-      speed = ShooterConstants.kShooterConstantSpeed;
+      speed = constantShootValue;
     }
 
     if (activePID) {

@@ -17,6 +17,7 @@ import frc.robot.auto.*;
 import frc.robot.auto.plans.AutoAllianceZonePlan;
 import frc.robot.auto.plans.AutoForwardPlan;
 import frc.robot.auto.plans.AutoMiddleFieldPlan;
+import frc.robot.auto.plans.AutoShootPlan;
 // import frc.robot.auto.plans.*;
 import frc.robot.commands.TeleopCmd;
 import frc.robot.commands.feeder.*;
@@ -69,6 +70,7 @@ public class RobotContainer {
       new AutoMiddleFieldPlan(drivetrain, intake, feeder, shooter);
   private final AutoAllianceZonePlan allianceZone = new AutoAllianceZonePlan(intake);
   private final AutoForwardPlan forward = new AutoForwardPlan(drivetrain, feeder, shooter, intake);
+  private final AutoShootPlan shoot = new AutoShootPlan(feeder, shooter, intake);
 
   public RobotContainer() {
 
@@ -91,7 +93,7 @@ public class RobotContainer {
     m_chooser.addOption("Go Forward", auto2);
     m_chooser.addOption("Middle", auto3);
     m_chooser.addOption("Alliance Side", auto4);
-    m_chooser.addOption("Auto[Rename Me]", auto5);
+    m_chooser.addOption("Shoot", auto5);
     m_chooser.addOption("Auto[Rename Me]", auto6);
     m_chooser.addOption("Auto[Rename Me]", auto7);
     SmartDashboard.putData("Auto Selector", m_chooser);
@@ -186,6 +188,7 @@ public class RobotContainer {
       auto = allianceZone;
         break;
       case auto5:
+      auto = shoot;
         break;
       case auto6:
         break;

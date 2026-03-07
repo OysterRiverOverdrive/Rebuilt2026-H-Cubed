@@ -209,6 +209,8 @@ public final class Constants {
 
     public static final double kShooterConstantSpeed = 10000;
 
+    public static final double kShooterSpecializedConstantSpeed = getShooterSpeed(2.5);
+
     public static final double kShooterP = 0.0001;
     public static final double kShooterI = 0;
     public static final double kShooterD = 0;
