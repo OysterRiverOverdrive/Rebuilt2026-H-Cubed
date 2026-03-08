@@ -420,16 +420,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
     if (!visionOdometryInitialPose && vision.estConsumer.initialized) {}
 
     tick++;
-
     if (tick == 10 && !vision.estConsumer.isStale()) {
       tick = 0;
 
       var stdDevs = vision.estConsumer.getStdDevs().div(10);
-
+      
       visionOdometry.addVisionMeasurement(
           vision.estConsumer.getPose2d(),
           vision.estConsumer.getTimeStamp(),
           stdDevs);
+
       SmartDashboard.putNumber("StdDevs1", stdDevs.get(0, 0));
       SmartDashboard.putNumber("StdDevs2", stdDevs.get(1, 0));
       SmartDashboard.putNumber("StdDevs3", stdDevs.get(2, 0));

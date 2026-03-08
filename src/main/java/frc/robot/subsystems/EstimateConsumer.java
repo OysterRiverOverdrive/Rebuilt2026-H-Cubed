@@ -29,7 +29,7 @@ public class EstimateConsumer {
   }
 
   public boolean isStale() {
-    if (stale >= 2) {
+    if (stale >= 5) {
       return true;
     } else {
       return false;
