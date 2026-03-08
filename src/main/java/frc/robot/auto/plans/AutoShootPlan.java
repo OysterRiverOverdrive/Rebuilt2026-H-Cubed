@@ -31,6 +31,9 @@ public class AutoShootPlan extends ParallelCommandGroup {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(lowerIntake.andThen(spinIntake.alongWith(constantShoot.alongWith(new AutoSleepCmd(2).andThen(spinFeeder)))));
+    addCommands(
+        lowerIntake.andThen(
+            spinIntake.alongWith(
+                constantShoot.alongWith(new AutoSleepCmd(2).andThen(spinFeeder)))));
   }
 }

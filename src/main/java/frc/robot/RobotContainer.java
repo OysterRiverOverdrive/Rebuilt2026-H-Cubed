@@ -45,7 +45,7 @@ public class RobotContainer {
   Command auto;
 
   // Subsystems
-  private final VisionSubsystem vision = new VisionSubsystem(new EstimateConsumer());
+  private final VisionSubsystem vision = new VisionSubsystem();
   private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(vision);
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final FeederSubsystem feeder = new FeederSubsystem(intake);
@@ -185,10 +185,10 @@ public class RobotContainer {
         auto = middleField;
         break;
       case auto4:
-      auto = allianceZone;
+        auto = allianceZone;
         break;
       case auto5:
-      auto = shoot;
+        auto = shoot;
         break;
       case auto6:
         break;

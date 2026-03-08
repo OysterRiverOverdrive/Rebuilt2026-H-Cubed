@@ -19,7 +19,6 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-
 import java.util.List;
 
 public class AutoMiddleFieldPlan extends ParallelCommandGroup {
@@ -52,7 +51,7 @@ public class AutoMiddleFieldPlan extends ParallelCommandGroup {
     Command constantShoot = new AutoConstantShootCmd(shooter, 8);
 
     addCommands(
-      new InstantCommand(() -> drive.recalibrateVisionOdometry())
+        new InstantCommand(() -> drive.recalibrateVisionOdometry())
             .andThen(toMid)
             .andThen(lowerIntake)
             .andThen(moveDown.alongWith(spinIntakeWheel))

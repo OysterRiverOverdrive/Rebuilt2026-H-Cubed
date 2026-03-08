@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -94,8 +93,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
           },
           new Pose2d(10, 2, new Rotation2d()),
-        VecBuilder.fill(0.1, 0.1, 0.1),
-        VecBuilder.fill(0.9, 0.9, 0.9));
+          VecBuilder.fill(0.1, 0.1, 0.1),
+          VecBuilder.fill(0.9, 0.9, 0.9));
 
   boolean visionOdometryInitialPose = false;
 
@@ -300,8 +299,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void recalibrateVisionOdometry() {
-    if (!vision.estConsumer.isStale()) {
-      resetVisionOdometryTranslation(vision.estConsumer.getPose2d().getTranslation());
+    double xSum = 0;
+    double ySum = 0;
+    int numEsts = 0;
+
+    for (EstimateConsumer estCon : vision.estCons) {
+      if (!estCon.isStale()) {
+        xSum += estCon.getPose2d().getX();
+        ySum += estCon.getPose2d().getY();
+        numEsts++;
+      }
+    }
+
+    if (numEsts != 0) {
+      resetVisionOdometryTranslation(new Translation2d(xSum / numEsts, ySum / numEsts));
     }
   }
 
@@ -417,23 +428,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
           });
     }
 
-    if (!visionOdometryInitialPose && vision.estConsumer.initialized) {}
-
     tick++;
-    if (tick >= 10 && !vision.estConsumer.isStale()) {
+
+    if (tick >= VisionConstants.kOdometryUpdateFrequency) {
       tick = 0;
 
-      var stdDevs = vision.estConsumer.getStdDevs().div(5);
-      
-      visionOdometry.addVisionMeasurement(
-          vision.estConsumer.getPose2d(),
-          vision.estConsumer.getTimeStamp(),
-          stdDevs);
+      for (int i = 0; i < 4; i++) {
+        if (!vision.estCons[i].isStale()) {
+          var stdDevs =
+              vision.estCons[i].getStdDevs().div(VisionConstants.kVisionOdometryStandardDevScalar);
 
-      SmartDashboard.putNumber("StdDevs1", stdDevs.get(0, 0));
-      SmartDashboard.putNumber("StdDevs2", stdDevs.get(1, 0));
-      SmartDashboard.putNumber("StdDevs3", stdDevs.get(2, 0));
+          visionOdometry.addVisionMeasurement(
+              vision.estCons[i].getPose2d(), vision.estCons[i].getTimeStamp(), stdDevs);
+
+          SmartDashboard.putNumber("StdDevsX_" + (i + 1), stdDevs.get(0, 0));
+          SmartDashboard.putNumber("StdDevsY_" + (i + 1), stdDevs.get(1, 0));
+          SmartDashboard.putNumber("StdDevsTheta_" + (i + 1), stdDevs.get(2, 0));
+        }
+        visionPose.setRobotPose(visionOdometry.getEstimatedPosition());
+      }
     }
-    visionPose.setRobotPose(visionOdometry.getEstimatedPosition());
   }
 }

@@ -88,6 +88,12 @@ public final class Constants {
                 Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(315, Units.Degrees)));
 
+    public static final int kNotStaleTime = 3;
+    public static final int kOdometryUpdateFrequency = 10;
+
+    // Note that this is used to divide, making vision trusted more
+    public static final double kVisionOdometryStandardDevScalar = 5;
+
     // The standard deviations of our vision estimated poses, which affect correction rate
     // (Fake values. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
