@@ -423,13 +423,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     if (tick == 10 && !vision.estConsumer.isStale()) {
       tick = 0;
+
+      var stdDevs = vision.estConsumer.getStdDevs().div(10);
+
       visionOdometry.addVisionMeasurement(
           vision.estConsumer.getPose2d(),
           vision.estConsumer.getTimeStamp(),
-          vision.estConsumer.getStdDevs());
-      SmartDashboard.putNumber("StdDevs1", vision.estConsumer.getStdDevs().get(0, 0));
-      SmartDashboard.putNumber("StdDevs2", vision.estConsumer.getStdDevs().get(1, 0));
-      SmartDashboard.putNumber("StdDevs3", vision.estConsumer.getStdDevs().get(2, 0));
+          stdDevs);
+      SmartDashboard.putNumber("StdDevs1", stdDevs.get(0, 0));
+      SmartDashboard.putNumber("StdDevs2", stdDevs.get(1, 0));
+      SmartDashboard.putNumber("StdDevs3", stdDevs.get(2, 0));
     }
     visionPose.setRobotPose(visionOdometry.getEstimatedPosition());
   }
