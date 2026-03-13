@@ -4,13 +4,14 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import frc.robot.Constants.VisionConstants;
 
 public class EstimateConsumer {
   Pose2d pose;
   double timestamp;
   Matrix<N3, N1> estimationStdDevs;
   boolean initialized = false;
-  int stale = 0;
+  int stale = 100;
 
   public void accept(Pose2d pose, double timestamp, Matrix<N3, N1> estimationStdDevs) {
     this.pose = pose;
@@ -29,7 +30,7 @@ public class EstimateConsumer {
   }
 
   public boolean isStale() {
-    if (stale >= 2) {
+    if (stale >= VisionConstants.kNotStaleTime) {
       return true;
     } else {
       return false;

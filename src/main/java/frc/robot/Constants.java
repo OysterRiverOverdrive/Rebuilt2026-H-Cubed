@@ -88,6 +88,12 @@ public final class Constants {
                 Angle.ofRelativeUnits(15, Units.Degrees),
                 Angle.ofRelativeUnits(315, Units.Degrees)));
 
+    public static final int kNotStaleTime = 3;
+    public static final int kOdometryUpdateFrequency = 10;
+
+    // Note that this is used to divide, making vision trusted more
+    public static final double kVisionOdometryStandardDevScalar = 5;
+
     // The standard deviations of our vision estimated poses, which affect correction rate
     // (Fake values. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
@@ -103,7 +109,7 @@ public final class Constants {
             Distance.ofRelativeUnits(469.115, Units.Inches),
             Distance.ofRelativeUnits(158.84, Units.Inches));
 
-    public static final double kAutoAimP = 1;
+    public static final double kAutoAimP = 1.2;
   }
 
   // Constants specifically for Driving & Operation
@@ -185,7 +191,7 @@ public final class Constants {
     public static final double kIntakeLiftDownDuration = 0.3;
     public static final double kIntakeLiftUpSpeed = -1;
     public static final double kIntakeLiftUpDuration = 2;
-    public static final double kIntakeWheelSpeed = 0.6;
+    public static final double kIntakeWheelSpeed = -0.6;
     public static final double kFeederWheelSpeed = 0.3;
     public static final double kFeederSpinSpeed = 0.3;
     public static final double kClimberSpeed = 0.3;
@@ -204,10 +210,12 @@ public final class Constants {
      * @return the speed to give the shooter
      */
     public static double getShooterSpeed(double distance) {
-      return ((12.84983 * distance) + 4793.08874);
+      return ((12.84983 * distance) + 4875);
     }
 
-    public static final double kShooterConstantSpeed = 7000;
+    public static final double kShooterConstantSpeed = 10000;
+
+    public static final double kShooterSpecializedConstantSpeed = getShooterSpeed(2.5);
 
     public static final double kShooterP = 0.0001;
     public static final double kShooterI = 0;

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -91,7 +92,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
           },
-          new Pose2d(10, 2, new Rotation2d()));
+          new Pose2d(10, 2, new Rotation2d()),
+          VecBuilder.fill(0.1, 0.1, 0.1),
+          VecBuilder.fill(0.9, 0.9, 0.9));
 
   boolean visionOdometryInitialPose = false;
 
@@ -243,9 +246,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_gyro.reset();
 
     if (getAlliance() == Alliance.Blue) {
-      visionOdometry.resetRotation(Rotation2d.fromDegrees(getHeading()));
+      visionOdometry.resetRotation(Rotation2d.fromDegrees(0));
     } else {
-      visionOdometry.resetRotation(Rotation2d.fromDegrees(getHeading() + 180));
+      visionOdometry.resetRotation(Rotation2d.fromDegrees(180));
     }
   }
 
@@ -296,8 +299,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void recalibrateVisionOdometry() {
-    if (!vision.estConsumer.isStale()) {
-      resetVisionOdometryTranslation(vision.estConsumer.getPose2d().getTranslation());
+    double xSum = 0;
+    double ySum = 0;
+    int numEsts = 0;
+
+    for (EstimateConsumer estCon : vision.estCons) {
+      if (!estCon.isStale()) {
+        xSum += estCon.getPose2d().getX();
+        ySum += estCon.getPose2d().getY();
+        numEsts++;
+      }
+    }
+
+    if (numEsts != 0) {
+      resetVisionOdometryTranslation(new Translation2d(xSum / numEsts, ySum / numEsts));
     }
   }
 
@@ -413,17 +428,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
           });
     }
 
-    if (!visionOdometryInitialPose && vision.estConsumer.initialized) {}
-
     tick++;
 
-    if (tick == 10 && vision.estConsumer.initialized) {
+    if (tick >= VisionConstants.kOdometryUpdateFrequency) {
       tick = 0;
-      visionOdometry.addVisionMeasurement(
-          vision.estConsumer.getPose2d(),
-          vision.estConsumer.getTimeStamp(),
-          vision.estConsumer.getStdDevs());
+
+      for (int i = 0; i < 4; i++) {
+        if (!vision.estCons[i].isStale()) {
+          var stdDevs =
+              vision.estCons[i].getStdDevs().div(VisionConstants.kVisionOdometryStandardDevScalar);
+
+          visionOdometry.addVisionMeasurement(
+              vision.estCons[i].getPose2d(), vision.estCons[i].getTimeStamp(), stdDevs);
+
+          SmartDashboard.putNumber("StdDevsX_" + (i + 1), stdDevs.get(0, 0));
+          SmartDashboard.putNumber("StdDevsY_" + (i + 1), stdDevs.get(1, 0));
+          SmartDashboard.putNumber("StdDevsTheta_" + (i + 1), stdDevs.get(2, 0));
+        }
+        visionPose.setRobotPose(visionOdometry.getEstimatedPosition());
+      }
     }
-    visionPose.setRobotPose(visionOdometry.getEstimatedPosition());
   }
 }

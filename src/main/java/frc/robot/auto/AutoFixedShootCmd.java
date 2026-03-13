@@ -6,15 +6,20 @@ package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class AutoSleepCmd extends Command {
+/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+public class AutoFixedShootCmd extends Command {
+  private ShooterSubsystem shooter;
   private Timer timer = new Timer();
-  private double sleepTime;
+  private double duration;
 
-  /** Creates a new AutoSleepCmd. */
-  public AutoSleepCmd(double timeSleep) {
-    sleepTime = timeSleep;
-    // Use addRequirements() here to declare subsystem dependencies.
+  /** Creates a new AutoIntakeForwardCmd. */
+  public AutoFixedShootCmd(
+      ShooterSubsystem shooter, double duration) { // spins the shooter wheel for (duration) seconds
+    this.shooter = shooter;
+    this.duration = duration;
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -22,6 +27,7 @@ public class AutoSleepCmd extends Command {
   public void initialize() {
     timer.reset();
     timer.start();
+    shooter.shooterSpecializedConstantShootCmd();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,20 +37,12 @@ public class AutoSleepCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    timer.stop();
+    shooter.shooterStopCmd();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    boolean retVal = false;
-    double currTime = timer.get();
-    if (currTime >= sleepTime) {
-      retVal = true;
-    } else {
-      retVal = false;
-    }
-
-    return retVal;
+    return timer.hasElapsed(duration) ? true : false;
   }
 }

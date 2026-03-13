@@ -14,9 +14,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.auto.*;
+import frc.robot.auto.plans.AutoAllianceZonePlan;
+import frc.robot.auto.plans.AutoForwardPlan;
+import frc.robot.auto.plans.AutoMiddleFieldPlan;
+import frc.robot.auto.plans.AutoShootPlan;
+// import frc.robot.auto.plans.*;
 import frc.robot.commands.TeleopCmd;
 import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.*;
+import frc.robot.commands.intake.IntakeWheelForwardCommand;
+import frc.robot.commands.intake.IntakeWheelReverseCommand;
+import frc.robot.commands.intake.IntakeWheelStopCommand;
 import frc.robot.subsystems.*;
 import frc.utils.ControllerUtils;
 import org.littletonrobotics.urcl.URCL;
@@ -37,7 +45,7 @@ public class RobotContainer {
   Command auto;
 
   // Subsystems
-  private final VisionSubsystem vision = new VisionSubsystem(new EstimateConsumer());
+  private final VisionSubsystem vision = new VisionSubsystem();
   private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(vision);
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final FeederSubsystem feeder = new FeederSubsystem(intake);
@@ -57,6 +65,13 @@ public class RobotContainer {
   // https://www.chiefdelphi.com/t/2026-playing-with-fusion-product-launch-advanced-battery-solution/507717/115
   private final TimeOfFlight tof = new TimeOfFlight(0);
 
+  // AUTOS
+  private final AutoMiddleFieldPlan middleField =
+      new AutoMiddleFieldPlan(drivetrain, intake, feeder, shooter);
+  private final AutoAllianceZonePlan allianceZone = new AutoAllianceZonePlan(intake);
+  private final AutoForwardPlan forward = new AutoForwardPlan(drivetrain, feeder, shooter, intake);
+  private final AutoShootPlan shoot = new AutoShootPlan(feeder, shooter, intake);
+
   public RobotContainer() {
 
     DataLogManager.start();
@@ -74,11 +89,11 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(teleopCmd);
 
     // Add Auto options to dropdown and push to dashboard
-    m_chooser.setDefaultOption("Auto[Rename Me]", auto1);
-    m_chooser.addOption("Auto[Rename Me]", auto2);
-    m_chooser.addOption("Auto[Rename Me]", auto3);
-    m_chooser.addOption("Auto[Rename Me]", auto4);
-    m_chooser.addOption("Auto[Rename Me]", auto5);
+    m_chooser.setDefaultOption("Do Nothing", auto1);
+    m_chooser.addOption("Go Forward", auto2);
+    m_chooser.addOption("Middle", auto3);
+    m_chooser.addOption("Alliance Side", auto4);
+    m_chooser.addOption("Shoot", auto5);
     m_chooser.addOption("Auto[Rename Me]", auto6);
     m_chooser.addOption("Auto[Rename Me]", auto7);
     SmartDashboard.putData("Auto Selector", m_chooser);
@@ -101,7 +116,7 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> drivetrain.recalibrateVisionOdometry()));
 
     cutil
-        .supplier(Controllers.xbox_a, DriveConstants.joysticks.DRIVER)
+        .supplier(Controllers.xbox_b, DriveConstants.joysticks.DRIVER)
         .onTrue(new InstantCommand(() -> DrivetrainSubsystem.toggleAutoAim()));
 
     // Feeder Bindings
@@ -122,7 +137,7 @@ public class RobotContainer {
         .onFalse(new IntakeWheelStopCommand(intake));
 
     cutil
-        .triggerSupplier(Controllers.xbox_lt, 0.2, DriveConstants.joysticks.DRIVER)
+        .supplier(Controllers.xbox_lb, DriveConstants.joysticks.OPERATOR)
         .onTrue(new IntakeWheelReverseCommand(intake))
         .onFalse(new IntakeWheelStopCommand(intake));
 
@@ -161,14 +176,19 @@ public class RobotContainer {
     switch (m_chooser.getSelected()) {
       default:
       case auto1:
+        auto = new BeginSleepCmd(drivetrain, 0);
         break;
       case auto2:
+        auto = forward;
         break;
       case auto3:
+        auto = middleField;
         break;
       case auto4:
+        auto = allianceZone;
         break;
       case auto5:
+        auto = shoot;
         break;
       case auto6:
         break;

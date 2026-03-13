@@ -44,9 +44,9 @@ public class VisionSubsystem extends SubsystemBase {
   ArrayList<PhotonPoseEstimator> photonEstimators = new ArrayList<>();
 
   Field2d[] poseEstField = new Field2d[4];
+  EstimateConsumer[] estCons = new EstimateConsumer[4];
 
   private Matrix<N3, N1> curStdDevs;
-  public final EstimateConsumer estConsumer;
 
   // Simulation
   private PhotonCameraSim cameraSim;
@@ -54,8 +54,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   AprilTagFieldLayout fieldmap;
 
-  public VisionSubsystem(EstimateConsumer estConsumer) {
-    this.estConsumer = estConsumer;
+  public VisionSubsystem() {
     camera1 = new PhotonCamera("Camera1");
     camera2 = new PhotonCamera("Camera2");
     camera3 = new PhotonCamera("Camera3");
@@ -71,6 +70,8 @@ public class VisionSubsystem extends SubsystemBase {
     for (int i = 0; i < 4; i++) {
       poseEstField[i] = new Field2d();
       SmartDashboard.putData("Camera " + (i + 1), poseEstField[i]);
+
+      estCons[i] = new EstimateConsumer();
     }
 
     fieldmap = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
@@ -113,6 +114,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
+    boolean staleVision = true;
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
     for (int i = 0; i < 4; i++) {
       PhotonCamera camera = cameras.get(i);
@@ -142,28 +144,17 @@ public class VisionSubsystem extends SubsystemBase {
               // Change our trust in the measurement based on the tags we can see
               var estStdDevs = getEstimationStdDevs();
 
-              estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+              estCons[fi].accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
             });
         if (visionEst.isPresent() == false) {
-          estConsumer.setStale();
+          estCons[i].setStale();
         }
       }
+
+      staleVision = staleVision && estCons[i].isStale();
     }
 
-    if (!(visionEst.isEmpty())) {
-      SmartDashboard.putNumber("Robot X", visionEst.get().estimatedPose.getX());
-      SmartDashboard.putNumber("Robot Y", visionEst.get().estimatedPose.getY());
-      SmartDashboard.putNumber(
-          "Robot Rotation",
-          visionEst.get().estimatedPose.getRotation().toRotation2d().getDegrees());
-
-      // Pose2d relPose = (new Pose2d()).plus(AprilTagCmd.tagPose.minus(estConsumer.getPose2d()));
-      // SmartDashboard.putNumber("Rel X", relPose.getX());
-      // SmartDashboard.putNumber("Rel Y", relPose.getY());
-      // SmartDashboard.putNumber("Rel Rot", relPose.getRotation().getDegrees());
-    }
-    ;
-    SmartDashboard.putBoolean("Stale Vision", estConsumer.isStale());
+    SmartDashboard.putBoolean("Stale Vision", staleVision);
   }
 
   private void updateEstimationStdDevs(
