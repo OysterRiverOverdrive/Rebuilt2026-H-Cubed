@@ -136,6 +136,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putData("Vision Pose", visionPose);
   }
 
+  public void applyChassisSpeeds(ChassisSpeeds speeds) {
+    SwerveModuleState[] swerveModuleStates =
+        DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, getTeleopMaxSpeed());
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    // make it work
+  }
+
   /**
    * Method to drive the robot using joystick info. (Field Oriented)
    *
@@ -162,16 +177,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * maxSpeedDrive;
     double rotDelivered = m_currentRotation * maxSpeedTurn;
 
-    var swerveModuleStates =
-        DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.fromFieldRelativeSpeeds(
+    applyChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
                 xSpeedDelivered, ySpeedDelivered, rotDelivered, getRotation2d()));
-
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, getTeleopMaxSpeed());
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
-    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   /**
@@ -200,15 +207,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * maxSpeedDrive;
     double rotDelivered = m_currentRotation * maxSpeedTurn;
 
-    var swerveModuleStates =
-        DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
-
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, getTeleopMaxSpeed());
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
-    m_rearRight.setDesiredState(swerveModuleStates[3]);
+    applyChassisSpeeds(new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
   }
 
   /** Sets the wheels into an X formation to prevent movement. */
