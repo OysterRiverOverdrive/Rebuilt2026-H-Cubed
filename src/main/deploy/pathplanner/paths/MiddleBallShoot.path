@@ -114,7 +114,19 @@
       "name": "Point Towards Zone"
     }
   ],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeForward 5sec",
+      "waypointRelativePos": 1.282392026578075,
+      "endWaypointRelativePos": 2.172757475083065,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeForward 5sec"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
