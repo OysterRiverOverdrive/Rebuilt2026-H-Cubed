@@ -14,8 +14,10 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
 
@@ -49,6 +51,11 @@ public class VisionSubsystem extends SubsystemBase {
   Field2d[] poseEstField = new Field2d[4];
   EstimateConsumer[] estCons = new EstimateConsumer[4];
 
+  private static final SendableChooser<String> fieldmap_chooser = new SendableChooser<>();
+  private static final String default_field = "Default Field";
+  private static final String custom_field = "Custom Field";
+  private String current_field = default_field;
+
   private Matrix<N3, N1> curStdDevs;
 
   // Simulation
@@ -77,13 +84,9 @@ public class VisionSubsystem extends SubsystemBase {
       estCons[i] = new EstimateConsumer();
     }
 
-    try {
-      fieldmap = new AprilTagFieldLayout(new File(Filesystem.getDeployDirectory(), "test_field1.json").getPath());
-      SmartDashboard.putString("ahhh failed to load ahhhh", "we good");
-    } catch (Exception e) {
-      fieldmap = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-      SmartDashboard.putString("ahhh failed to load ahhhh", e.toString());
-    }
+    fieldmap_chooser.setDefaultOption(default_field, default_field);
+    fieldmap_chooser.addOption(custom_field, custom_field);
+    SmartDashboard.putData("Loaded Fieldmap", fieldmap_chooser);
 
     photonEstimatorCam1 = new PhotonPoseEstimator(fieldmap, VisionConstants.kRobotToCam1);
 
@@ -164,6 +167,26 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putBoolean("Stale Vision", staleVision);
+
+    String prev_field = current_field;
+    current_field = fieldmap_chooser.getSelected();
+    if (current_field != prev_field) {
+      switch (current_field) {
+        default:
+        case default_field:
+          fieldmap = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+          break;
+        case custom_field:
+          try {
+            fieldmap = new AprilTagFieldLayout(new File(Filesystem.getDeployDirectory(), "test_field1.json").getPath());
+            SmartDashboard.putString("ahhh failed to load ahhhh", "we good");
+          } catch (Exception e) {
+            fieldmap = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+            SmartDashboard.putString("ahhh failed to load ahhhh", e.toString());
+          }
+          break;
+      }
+    }
   }
 
   private void updateEstimationStdDevs(
