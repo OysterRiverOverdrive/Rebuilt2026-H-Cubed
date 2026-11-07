@@ -12,11 +12,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Robot;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,7 +77,13 @@ public class VisionSubsystem extends SubsystemBase {
       estCons[i] = new EstimateConsumer();
     }
 
-    fieldmap = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    try {
+      fieldmap = new AprilTagFieldLayout(new File(Filesystem.getDeployDirectory(), "test_field1.json").getPath());
+      SmartDashboard.putString("ahhh failed to load ahhhh", "we good");
+    } catch (Exception e) {
+      fieldmap = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+      SmartDashboard.putString("ahhh failed to load ahhhh", e.toString());
+    }
 
     photonEstimatorCam1 = new PhotonPoseEstimator(fieldmap, VisionConstants.kRobotToCam1);
 
